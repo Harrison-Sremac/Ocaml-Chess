@@ -1,0 +1,29 @@
+---
+# Members of your group.
+group:
+  - name: Mericel TAo
+    netid: mst223
+  - name: 
+    netid: 
+  - name: 
+    netid: 
+  - name: 
+    netid: 
+  - name: 
+    netid: 
+# Your PM.
+pm:
+  name: Cassidy Lnagenfield
+  netid: cml397
+# Set to false if you don't want your gallery entry to be public.
+publish: true
+# Pithy title
+title: "Spelling Bee (But Better)"
+# OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
+git-repo: "https://github.coecis.cornell.edu/mst223/cs3110_final_project"
+# If you have no demo screencast, replace the url string with an empty string ""
+demo-video-url: ""
+# Write a short, attention-grabbing description of your project.
+
+  This will be very similar to the New York Times’ Spelling Bee game. The user will be given seven letters, with one letter highlighted in a different color. Then, the user can make as many words as possible with any combination of letters, as long as it includes the highlighted letter. The more words that the user can make, the more points they will get. They will reach the max level if they get all of the possible words.
+  We will also add the option for users to adjust their game's difficulty, allowing them to control the number of letters they are permitted to use.
