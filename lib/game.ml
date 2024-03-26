@@ -12,7 +12,9 @@ let no_repeat_letters word =
   let letters_set = word |> BatString.to_list |> CharSet.of_list in
   CharSet.cardinal letters_set = BatString.length word
 
-(* creates lists of possible words*)
+(* creates lists of possible words, source:
+   https://github.com/ConorSheehan1/spelling-bee/blob/main/data/AllWords.txt,
+   date accessed 3/25/24*)
 let word_list = BatList.of_enum (BatFile.lines_of "data/AllWords.txt")
 
 (** [initalize] will begin the game thinking. [word_list] reads the list of
