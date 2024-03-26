@@ -18,17 +18,17 @@ let no_repeat_letters word =
 let word_list = BatList.of_enum (BatFile.lines_of "data/AllWords.txt")
 
 (** [initalize] will begin the game thinking. [word_list] reads the list of
-    valid and possible Spelling Bee words. [reandom_five_letter_word lst] finds
+    valid and possible Spelling Bee words. [reandom_seven_letter_word lst] finds
     a random five letter word with no duplicate letters from [lst]. Requires:
     [lst] is not empty. *)
 let initialize () =
   Random.self_init ();
-  let random_five_letter_word lst =
-    let five_list =
-      List.filter (fun x -> String.length x = 5 && no_repeat_letters x) lst
+  let random_seven_letter_word lst =
+    let seven_list =
+      List.filter (fun x -> String.length x = 7 && no_repeat_letters x) lst
     in
-    let index = Random.int (List.length five_list) in
-    List.nth five_list index
+    let index = Random.int (List.length seven_list) in
+    List.nth seven_list index
   in
   (* Creates a list of chars made up of the letters of the random word. Source:
      https://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatList.html,
@@ -36,7 +36,7 @@ let initialize () =
      https://ocaml-batteries-team.github.io/batteries-included/hdoc2/BatString.html,
      line 34, date accessed 3/25/24 *)
   let letters =
-    BatList.shuffle (BatString.to_list (random_five_letter_word word_list))
+    BatList.shuffle (BatString.to_list (random_seven_letter_word word_list))
   in
 
   (* Chooses a random letter to be the central letter *)
