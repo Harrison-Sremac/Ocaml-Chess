@@ -20,7 +20,7 @@ title: "Spelling Bee (But Better)"
 # OK if this is a Cornell Github link, but public gallery viewers won't be able to see it.
 git-repo: "https://github.coecis.cornell.edu/mst223/cs3110_final_project"
 # If you have no demo screencast, replace the url string with an empty string ""
-demo-video-url: ""
+demo-video-url: "https://youtu.be/MVJWCOn1-Qk"
 # Write a short, attention-grabbing description of your project.
 
   This will be very similar to the New York Times’ Spelling Bee game. The user will be given seven letters, with one letter highlighted in a different color. Then, the user can make as many words as possible with any combination of letters, as long as it includes the highlighted letter. The more words that the user can make, the more points they will get. They will reach the max level if they get all of the possible words.
