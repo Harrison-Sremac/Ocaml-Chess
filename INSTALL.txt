@@ -1,0 +1,5 @@
+After downloading cs3110_final_project.zip, double click the zipped file to access the cs3110_final_project folder. Launch the terminal on your computer and use cd commands to open the directory the cs3110_final_project folder is in. Then, assuming OCaml is set up on your computer according to the OP textbook, type dune exec bin/main.exe. The terminal will output a message saying "Welcome to the Spelling Bee Game!" along with letters you can use to create words and the central letter that you must use in every word you input.
+
+The object of the game is to correctly list as many valid words as possible using combinations of the seven letters given to you by the program. Each valid word must contain the central letter. Enter "quit" after you are done playing.
+
+To edit the list of words in the game's dictionary, open the AllWords.txt file located in the data folder of the cs3110_final_project folder. Please ensure the word you enter in the correct location alphabetically.
