@@ -1,5 +1,3 @@
-open Piece
-
 type color =
   | White
   | Black
