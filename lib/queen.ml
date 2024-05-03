@@ -2,17 +2,27 @@ type color =
   | White
   | Black
 
-type piece_type = Queen
+type position = int * int
 
 type piece = {
-  piece_type : piece_type;
+  piece_type : Piece.piece_type;
   color : color;
+  possible_moves : position -> color -> position list;
 }
 
-let string_of_piece p =
-  let color_char =
-    match p.color with
-    | White -> 'W'
-    | Black -> 'B'
+(* Possible moves for a Queen *)
+let possible_moves (pos : position) : position list =
+  let x, y = pos in
+  let line_moves =
+    List.init 8 (fun i -> (x + i + 1, y))
+    @ List.init 8 (fun i -> (x - i - 1, y))
+    @ List.init 8 (fun i -> (x, y + i + 1))
+    @ List.init 8 (fun i -> (x, y - i - 1))
   in
-  Printf.sprintf "Q%c" color_char
+  let diag_moves =
+    List.init 8 (fun i -> (x + i + 1, y + i + 1))
+    @ List.init 8 (fun i -> (x + i + 1, y - i - 1))
+    @ List.init 8 (fun i -> (x - i - 1, y + i + 1))
+    @ List.init 8 (fun i -> (x - i - 1, y - i - 1))
+  in
+  line_moves @ diag_moves

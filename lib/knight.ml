@@ -2,17 +2,23 @@ type color =
   | White
   | Black
 
-type piece_type = Knight
+type position = int * int
 
 type piece = {
-  piece_type : piece_type;
+  piece_type : Piece.piece_type;
   color : color;
+  possible_moves : position -> color -> position list;
 }
 
-let string_of_piece p =
-  let color_char =
-    match p.color with
-    | White -> 'W'
-    | Black -> 'B'
-  in
-  Printf.sprintf "N%c" color_char
+let possible_moves (pos : position) : position list =
+  let x, y = pos in
+  [
+    (x + 2, y + 1);
+    (x + 2, y - 1);
+    (x - 2, y + 1);
+    (x - 2, y - 1);
+    (x + 1, y + 2);
+    (x + 1, y - 2);
+    (x - 1, y + 2);
+    (x - 1, y - 2);
+  ]

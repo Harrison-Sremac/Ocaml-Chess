@@ -2,11 +2,12 @@ type color =
   | White
   | Black
 
-type piece_type = Rook
+type position = int * int
 
 type piece = {
-  piece_type : piece_type;
+  piece_type : Piece.piece_type;
   color : color;
+  possible_moves : position -> color -> position list;
 }
 
-val string_of_piece : piece -> string
+val possible_moves : position -> position list
