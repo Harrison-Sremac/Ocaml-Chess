@@ -1,6 +1,6 @@
-open Board
-open Input
-open Ai
+open Chess.Board
+open Chess.Input
+open Chess.Ai
 
 let print_welcome_message () =
   print_endline "Welcome to OCaml Chess!";
