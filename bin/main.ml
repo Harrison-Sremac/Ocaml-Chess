@@ -1,6 +1,6 @@
 open Chess.Board
 open Chess.Input
-open Chess.Ai
+open Chess.Game
 
 let print_welcome_message () =
   print_endline "Welcome to OCaml Chess!";
@@ -23,13 +23,15 @@ let rec game_loop state =
       (match state.turn with
       | White -> "White's move:"
       | Black -> "Black's move:");
-    let move = Input.read_move () in
+    let move = read_move () in
     match move with
     | Some (src, dest) ->
-        let new_board = make_move state.board src dest in
+        let new_board = make_move state src dest in
         let next_turn = switch_turn state.turn in
-        let game_over = check_mate new_board || stale_mate new_board in
-        game_loop { board = new_board; turn = next_turn; game_over }
+        let game_over =
+          check_mate new_board.board || stale_mate new_board.board
+        in
+        game_loop { board = new_board.board; turn = next_turn; game_over }
     | None ->
         print_endline "Invalid move or format. Please try again.";
         game_loop state
