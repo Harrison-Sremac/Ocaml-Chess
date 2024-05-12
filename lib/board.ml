@@ -30,7 +30,7 @@ let initialize_board () =
 
 (* Converts the board to a string representation with file and rank labels *)
 let board_to_string board =
-  let empty_line = " +-a-b-c-d-e-f-g-h-+" in
+  let empty_line = "+  a b c d e f g h  +" in
   let rows = Array.init 8 (fun _ -> Array.make 8 ".") in
   (* Initialize with "." instead of '.' *)
   List.iter
