@@ -1,6 +1,6 @@
 type game_state = {
   board : Board.board;
-  turn : Board.color;
+  turn : Types.color;
   game_over : bool;
 }
 

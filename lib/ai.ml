@@ -1,4 +1,4 @@
-open Board
+open Types
 
 type difficulty = int
 
@@ -16,8 +16,8 @@ let evaluate_board board =
         | Pawn -> 10
       in
       match color with
-      | Board.White -> acc + value
-      | Board.Black -> acc - value)
+      | White -> acc + value
+      | Black -> acc - value)
     0 board
 
 (* Minimax algorithm to determine the best move *)

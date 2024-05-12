@@ -1,4 +1,5 @@
 open Chess.Board
+open Chess.Types
 
 type state = {
   board : board;

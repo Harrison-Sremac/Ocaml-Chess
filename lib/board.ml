@@ -1,16 +1,4 @@
-open Pieces
-
-type piece =
-  | King
-  | Queen
-  | Rook
-  | Bishop
-  | Knight
-  | Pawn
-
-type color =
-  | White
-  | Black
+open Types
 
 type position = char * int
 type board = (position * (piece * color)) list
@@ -106,7 +94,7 @@ let all_possible_moves board color =
   List.fold_left
     (fun acc (pos, (piece, piece_color)) ->
       if piece_color = color then
-        let piece_moves = possible_moves piece color pos board in
+        let piece_moves = Pieces.possible_moves piece color pos board in
         List.append piece_moves acc
       else acc)
     [] board

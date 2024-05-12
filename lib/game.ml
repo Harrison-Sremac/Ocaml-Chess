@@ -1,18 +1,18 @@
 type game_state = {
   board : Board.board;
-  turn : Board.color;
+  turn : Types.color;
   game_over : bool;
 }
 
 (* Initialize a new game with the starting positions *)
 let init_game () =
-  { board = Board.initialize_board (); turn = Board.White; game_over = false }
+  { board = Board.initialize_board (); turn = Types.White; game_over = false }
 
 (* Switch turns *)
 let switch_turn turn =
   match turn with
-  | Board.White -> Board.Black
-  | Board.Black -> Board.White
+  | Types.White -> Types.Black
+  | Types.Black -> Types.White
 
 (* Make a move on the board, assuming it's a legal move *)
 let make_move state src dest =

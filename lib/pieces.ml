@@ -1,16 +1,4 @@
-open Board
-
-type piece =
-  | King
-  | Queen
-  | Rook
-  | Bishop
-  | Knight
-  | Pawn
-
-type color =
-  | White
-  | Black
+open Types
 
 type position = char * int (* e.g., ('e', 2) *)
 type board = (position * (piece * color)) list
@@ -59,14 +47,17 @@ let queen_moves color position board =
     [ (-1, 0); (1, 0); (0, -1); (0, 1); (-1, -1); (1, 1); (-1, 1); (1, -1) ]
   in
   linear_moves color position board directions
+  |> List.map (fun end_pos -> (position, end_pos))
 
 let rook_moves color position board =
   let directions = [ (-1, 0); (1, 0); (0, -1); (0, 1) ] in
   linear_moves color position board directions
+  |> List.map (fun end_pos -> (position, end_pos))
 
 let bishop_moves color position board =
   let directions = [ (-1, -1); (1, 1); (-1, 1); (1, -1) ] in
   linear_moves color position board directions
+  |> List.map (fun end_pos -> (position, end_pos))
 
 let knight_moves color (file, rank) board =
   let moves =
@@ -90,7 +81,6 @@ let pawn_moves color (file, rank) board =
   let start_rank = if color = White then 2 else 7 in
   let single_step_pos = (file, rank + forward) in
   let double_step_pos = (file, rank + (2 * forward)) in
-
   let moves =
     match List.assoc_opt single_step_pos board with
     | None ->
@@ -100,7 +90,6 @@ let pawn_moves color (file, rank) board =
         else single_move
     | Some _ -> []
   in
-
   let captures =
     List.filter_map
       (fun (df, _) ->
@@ -113,7 +102,6 @@ let pawn_moves color (file, rank) board =
         else None)
       [ (-1, 0); (1, 0) ]
   in
-
   moves @ captures
 
 let possible_moves piece color position board =
