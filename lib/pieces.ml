@@ -1,3 +1,5 @@
+open Board
+
 type piece =
   | King
   | Queen
@@ -86,32 +88,32 @@ let knight_moves color (file, rank) board =
 let pawn_moves color (file, rank) board =
   let forward = if color = White then 1 else -1 in
   let start_rank = if color = White then 2 else 7 in
-  let single_step = [ ((file, rank), single_step) ] in
-  let double_step = [ ((file, rank), double_step) ] in
+  let single_step_pos = (file, rank + forward) in
+  let double_step_pos = (file, rank + (2 * forward)) in
+
   let moves =
-    match List.assoc_opt single_step board with
+    match List.assoc_opt single_step_pos board with
     | None ->
-        if rank = start_rank && List.assoc_opt double_step board = None then
-          single_step @ double_step
-        else single_step
+        let single_move = [ ((file, rank), single_step_pos) ] in
+        if rank = start_rank && List.assoc_opt double_step_pos board = None then
+          single_move @ [ ((file, rank), double_step_pos) ]
+        else single_move
     | Some _ -> []
   in
 
   let captures =
-    let capture_moves = [ (-1, forward); (1, forward) ] in
     List.filter_map
-      (fun (df, dr) ->
-        let new_file = char_of_int (Char.code file + df) in
-        let new_rank = rank + dr in
-        let new_pos = (new_file, new_rank) in
-        if within_board new_pos then
-          match List.assoc_opt new_pos board with
+      (fun (df, _) ->
+        let capture_pos = (char_of_int (Char.code file + df), rank + forward) in
+        if within_board capture_pos then
+          match List.assoc_opt capture_pos board with
           | Some (_, piece_color) when piece_color <> color ->
-              Some ((file, rank), new_pos)
+              Some ((file, rank), capture_pos)
           | _ -> None
         else None)
-      capture_moves
+      [ (-1, 0); (1, 0) ]
   in
+
   moves @ captures
 
 let possible_moves piece color position board =
