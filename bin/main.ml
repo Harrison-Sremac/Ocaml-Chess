@@ -1,5 +1,6 @@
 open Chess.Board
 open Chess.Types
+open Chess.Input
 
 type state = {
   board : board;
@@ -12,7 +13,7 @@ let print_welcome_message () =
   print_endline
     "Instructions: Enter moves in the format 'e2 e4' to move a piece from e2 \
      to e4.";
-  print_endline "Type 'exit' to quit the game."
+  print_endline "Type 'quit' to quit the game."
 
 let rec game_loop state =
   print_board state.board;
@@ -28,39 +29,27 @@ let rec game_loop state =
       (match state.turn with
       | White -> "White's move:"
       | Black -> "Black's move:");
-    match read_line () with
-    | "exit" ->
+    match read_move () with
+    | Some Quit ->
         print_endline "Exiting the game.";
         exit 0
-    | move ->
-        let move_parts = String.split_on_char ' ' move in
-        if List.length move_parts <> 2 then begin
-          print_endline "Invalid move format. Please try again.";
-          game_loop state
+    | Some (Move (src, dest)) ->
+        if is_valid_move state.board src dest then begin
+          let new_board = make_move state.board src dest in
+          let next_turn = switch_turn state.turn in
+          let game_over = check_mate new_board || stale_mate new_board in
+          let updated_state =
+            { board = new_board; turn = next_turn; game_over }
+          in
+          game_loop updated_state
         end
         else begin
-          let src =
-            ( (move_parts |> List.hd).[0],
-              int_of_string (String.sub (List.hd move_parts) 1 1) )
-          in
-          let dest =
-            ( (move_parts |> List.tl |> List.hd).[0],
-              int_of_string (String.sub (List.hd (List.tl move_parts)) 1 1) )
-          in
-          if is_valid_move state.board src dest then begin
-            let new_board = make_move state.board src dest in
-            let next_turn = switch_turn state.turn in
-            let game_over = check_mate new_board || stale_mate new_board in
-            let updated_state =
-              { board = new_board; turn = next_turn; game_over }
-            in
-            game_loop updated_state
-          end
-          else begin
-            print_endline "Invalid move. Please try again.";
-            game_loop state
-          end
+          print_endline "Invalid move. Please try again.";
+          game_loop state
         end
+    | None ->
+        print_endline "Invalid input. Please try again.";
+        game_loop state
   end
 
 let main () =

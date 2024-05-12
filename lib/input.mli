@@ -1,6 +1,6 @@
-(* Parses user input into a position type *)
-val parse_position : string -> (char * int) option
+type user_command =
+  | Move of (char * int) * (char * int)
+  | Quit
 
-(* Reads a move from standard input and returns start and end positions if
-   valid *)
-val read_move : unit -> ((char * int) * (char * int)) option
+(* Reads a move or a quit command from standard input *)
+val read_move : unit -> user_command option

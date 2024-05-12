@@ -8,17 +8,22 @@ let parse_position input =
     else None
   else None
 
-(* Reads a move from standard input, expecting two positions separated by a
-   space *)
+type user_command =
+  | Move of (char * int) * (char * int)
+  | Quit
+
+(* Reads a move or a quit command from standard input *)
 let read_move () =
-  print_endline "Enter your move (e.g., e2 e4):";
+  print_endline "Enter your move (e.g., e2 e4) or type 'quit' to end the game:";
   try
     let line = read_line () in
-    match String.split_on_char ' ' line with
-    | [ start; finish ] -> begin
-        match (parse_position start, parse_position finish) with
-        | Some start_pos, Some finish_pos -> Some (start_pos, finish_pos)
-        | _ -> None
-      end
-    | _ -> None
+    if line = "quit" then Some Quit
+    else
+      match String.split_on_char ' ' line with
+      | [ start; finish ] -> (
+          match (parse_position start, parse_position finish) with
+          | Some start_pos, Some finish_pos ->
+              Some (Move (start_pos, finish_pos))
+          | _ -> None)
+      | _ -> None
   with End_of_file -> None

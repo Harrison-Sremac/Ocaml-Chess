@@ -23,30 +23,32 @@ let create_piece_row color rank =
   ]
 
 (* Initializes the chessboard with pieces at starting positions *)
+(* Initializes the chessboard with pieces at starting positions *)
 let initialize_board () =
   create_piece_row White 1 @ create_pawn_row White 2 @ create_pawn_row Black 7
   @ create_piece_row Black 8
 
 (* Converts the board to a string representation with file and rank labels *)
 let board_to_string board =
-  let empty_line = "+-a-b-c-d-e-f-g-h-+" in
-  let rows = Array.init 8 (fun _ -> Array.make 8 '.') in
+  let empty_line = " +-a-b-c-d-e-f-g-h-+" in
+  let rows = Array.init 8 (fun _ -> Array.make 8 ".") in
+  (* Initialize with "." instead of '.' *)
   List.iter
     (fun ((file, rank), (piece, color)) ->
       let symbol =
         match (piece, color) with
-        | King, White -> 'K'
-        | King, Black -> 'k'
-        | Queen, White -> 'Q'
-        | Queen, Black -> 'q'
-        | Rook, White -> 'R'
-        | Rook, Black -> 'r'
-        | Bishop, White -> 'B'
-        | Bishop, Black -> 'b'
-        | Knight, White -> 'N'
-        | Knight, Black -> 'n'
-        | Pawn, White -> 'P'
-        | Pawn, Black -> 'p'
+        | King, White -> "♔"
+        | King, Black -> "♚"
+        | Queen, White -> "♕"
+        | Queen, Black -> "♛"
+        | Rook, White -> "♖"
+        | Rook, Black -> "♜"
+        | Bishop, White -> "♗"
+        | Bishop, Black -> "♝"
+        | Knight, White -> "♘"
+        | Knight, Black -> "♞"
+        | Pawn, White -> "♙"
+        | Pawn, Black -> "♟"
       in
       rows.(8 - rank).(Char.code file - Char.code 'a') <- symbol)
     board;
@@ -55,7 +57,7 @@ let board_to_string board =
       (fun i row ->
         string_of_int (8 - i)
         ^ " |"
-        ^ (Array.to_list row |> List.map Char.escaped |> String.concat " ")
+        ^ (Array.to_list row |> String.concat " ")
         ^ "| "
         ^ string_of_int (8 - i))
       rows
