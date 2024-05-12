@@ -38,8 +38,9 @@ let initialize_board () : board =
   @ create_piece_row Black 8
 
 (* Converts the board to a string representation *)
+(* Converts the board to a string representation with file and rank labels *)
 let board_to_string board =
-  let empty_line = String.make 17 '-' in
+  let empty_line = " +-a-b-c-d-e-f-g-h-+" in
   let rows = Array.init 8 (fun _ -> Array.make 8 '.') in
   List.iter
     (fun ((file, rank), (piece, color)) ->
@@ -58,18 +59,20 @@ let board_to_string board =
         | Pawn, White -> 'P'
         | Pawn, Black -> 'p'
       in
-      rows.(rank - 1).(Char.code file - Char.code 'a') <- symbol)
+      rows.(8 - rank).(Char.code file - Char.code 'a') <- symbol)
     board;
+  let numbered_rows =
+    Array.mapi
+      (fun i row ->
+        string_of_int (8 - i)
+        ^ " |"
+        ^ (Array.to_list row |> List.map Char.escaped |> String.concat " ")
+        ^ "| "
+        ^ string_of_int (8 - i))
+      rows
+  in
   String.concat "\n"
-    (empty_line
-     :: Array.to_list
-          (Array.map
-             (fun row ->
-               "|"
-               ^ (Array.to_list row |> List.map Char.escaped |> String.concat "")
-               ^ "|")
-             rows)
-    @ [ empty_line ])
+    ([ empty_line ] @ Array.to_list numbered_rows @ [ empty_line ])
 
 (* Checks if moving from src to dest is a valid move in the given board state *)
 let is_valid_move board src dest =
