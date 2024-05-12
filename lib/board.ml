@@ -1,3 +1,5 @@
+open Pieces
+
 type piece =
   | King
   | Queen
@@ -10,7 +12,7 @@ type color =
   | White
   | Black
 
-type position = char * int (* e.g., ('e', 2) *)
+type position = char * int
 type board = (position * (piece * color)) list
 
 (* Helper function to create a row of pawns for a given color *)
@@ -33,14 +35,13 @@ let create_piece_row color rank =
   ]
 
 (* Initializes the chessboard with pieces at starting positions *)
-let initialize_board () : board =
+let initialize_board () =
   create_piece_row White 1 @ create_pawn_row White 2 @ create_pawn_row Black 7
   @ create_piece_row Black 8
 
-(* Converts the board to a string representation *)
 (* Converts the board to a string representation with file and rank labels *)
 let board_to_string board =
-  let empty_line = " +-a-b-c-d-e-f-g-h-+" in
+  let empty_line = "+-a-b-c-d-e-f-g-h-+" in
   let rows = Array.init 8 (fun _ -> Array.make 8 '.') in
   List.iter
     (fun ((file, rank), (piece, color)) ->
@@ -74,13 +75,14 @@ let board_to_string board =
   String.concat "\n"
     ([ empty_line ] @ Array.to_list numbered_rows @ [ empty_line ])
 
-(* Checks if moving from src to dest is a valid move in the given board state *)
+(* Checks if a move is valid by ensuring it is one of the possible moves for the
+   piece at src *)
 let is_valid_move board src dest =
-  let src_file, src_rank = src in
-  let dest_file, dest_rank = dest in
-  List.exists (fun (pos, _) -> pos = src) board
-  && src_file >= 'a' && src_file <= 'h' && src_rank >= 1 && src_rank <= 8
-  && dest_file >= 'a' && dest_file <= 'h' && dest_rank >= 1 && dest_rank <= 8
+  match List.assoc_opt src board with
+  | Some (piece, color) ->
+      let moves = Pieces.possible_moves piece color src board in
+      List.exists (fun (_, end_pos) -> end_pos = dest) moves
+  | None -> false
 
 (* Moves a piece from source to destination, returning the new board state *)
 let make_move board src dest =
@@ -94,26 +96,22 @@ let make_move board src dest =
     | None -> board (* No piece at src; return original board *)
   else board (* Invalid move; return original board *)
 
-(* Generates all possible moves for a given color *)
-let all_possible_moves board color =
-  let add_moves_for_piece acc (pos, (piece, piece_color)) =
-    if piece_color = color then
-      let moves =
-        match piece with
-        | Pawn ->
-            [ (fst pos, snd pos + if piece_color = White then 1 else -1) ]
-            (* Simplified move logic for pawn, forward only *)
-        | Rook ->
-            List.init 7 (fun i -> (fst pos, snd pos + i + 1))
-            (* Simplified logic for Rook, moving vertically down *)
-        | _ -> [] (* Placeholder for other pieces *)
-      in
-      List.fold_left (fun acc move -> (pos, move) :: acc) acc moves
-    else acc
-  in
-  List.fold_left add_moves_for_piece [] board
+(* Placeholder for checking checkmate and stalemate conditions *)
+let check_mate _board = false
+let stale_mate _board = false
 
-(* Implementation of switch_turn to toggle between White and Black *)
+(* Generates all possible moves for a given color, used for check/checkmate
+   evaluation *)
+let all_possible_moves board color =
+  List.fold_left
+    (fun acc (pos, (piece, piece_color)) ->
+      if piece_color = color then
+        let piece_moves = possible_moves piece color pos board in
+        List.append piece_moves acc
+      else acc)
+    [] board
+
+(* Switches the current player's turn *)
 let switch_turn color =
   match color with
   | White -> Black
@@ -121,9 +119,3 @@ let switch_turn color =
 
 (* Prints the board to the terminal *)
 let print_board board = print_endline (board_to_string board)
-
-(* Placeholder for checking checkmate condition *)
-let check_mate _board = false
-
-(* Placeholder for checking stalemate condition *)
-let stale_mate _board = false

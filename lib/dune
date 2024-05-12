@@ -1,3 +1,4 @@
 (library
  (name chess)
- (libraries batteries ANSITerminal))
+ (libraries batteries ANSITerminal)
+ (flags :standard -w -37-34-32-27))
