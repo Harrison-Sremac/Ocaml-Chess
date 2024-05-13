@@ -115,7 +115,10 @@ let make_move state src dest curr_color =
         last_move = Some (src, dest);
       }
   | Some (Pawn, _) when snd dest = 8 || snd dest = 1 ->
-      let new_board = promote_pawn state.board dest curr_color in
+      let board_without_pawn =
+        List.filter (fun (p, _) -> p <> src) state.board
+      in
+      let new_board = promote_pawn board_without_pawn dest curr_color in
       let game_over = check_mate new_board || stale_mate new_board in
       {
         board = new_board;
