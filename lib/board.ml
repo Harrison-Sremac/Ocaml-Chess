@@ -83,7 +83,10 @@ let make_move board src dest curr_color =
         let board_without_src =
           List.filter (fun (pos, _) -> pos <> src) board
         in
-        (dest, piece) :: board_without_src
+        let board_without_dest =
+          List.filter (fun (pos, _) -> pos <> dest) board_without_src
+        in
+        (dest, piece) :: board_without_dest
     | None -> board
   else board
 

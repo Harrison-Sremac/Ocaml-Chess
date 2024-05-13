@@ -31,29 +31,35 @@ let perform_castling board src dest color =
   :: (new_rook_pos, (Rook, color))
   :: board_without_pieces
 
-let is_en_passant_move src dest piece board last_move =
-  match piece with
-  | Pawn ->
+let is_en_passant_move src dest piece board last_move curr_color =
+  match (piece, last_move) with
+  | Pawn, Some ((last_src_file, last_src_rank), (last_dest_file, last_dest_rank))
+    ->
       let src_file, src_rank = src in
       let dest_file, dest_rank = dest in
-      let last_src, last_dest =
-        match last_move with
-        | Some mv -> mv
-        | None -> (('x', 0), ('x', 0))
-      in
-      let last_src_file, last_src_rank = last_src in
-      let last_dest_file, last_dest_rank = last_dest in
-      last_src_rank = 7 && last_dest_rank = 5 && dest_rank = 6
-      && last_src_file = src_file && last_dest_file = dest_file
+      (* Check if the move is diagonal, one rank forward, and captures the
+         opponent's pawn *)
+      abs (Char.code src_file - Char.code dest_file) = 1
+      && ((src_rank = 5 && curr_color = White)
+         || (src_rank = 4 && curr_color = Black))
+      && ((dest_rank = 6 && curr_color = White)
+         || (dest_rank = 3 && curr_color = Black))
+      && last_dest_file = dest_file && last_dest_rank = src_rank
+      && List.exists
+           (fun (pos, (p, c)) ->
+             pos = (last_dest_file, last_dest_rank)
+             && p = Pawn && c <> curr_color)
+           board
   | _ -> false
 
-let perform_en_passant board src dest =
+let perform_en_passant board src dest curr_color =
   let file, rank = dest in
-  let capture_pos = (file, rank - 1) in
+  let capture_rank = if curr_color = White then rank - 1 else rank + 1 in
+  let capture_pos = (file, capture_rank) in
   let board_without_pieces =
     List.filter (fun (pos, _) -> pos <> src && pos <> capture_pos) board
   in
-  (dest, (Pawn, White)) :: board_without_pieces
+  (dest, (Pawn, curr_color)) :: board_without_pieces
 
 type game_state = {
   board : Board.board;
@@ -97,8 +103,9 @@ let make_move state src dest curr_color =
         last_move = Some (src, dest);
       }
   | Some (Pawn, _)
-    when is_en_passant_move src dest Pawn state.board state.last_move ->
-      let new_board = perform_en_passant state.board src dest in
+    when is_en_passant_move src dest Pawn state.board state.last_move curr_color
+    ->
+      let new_board = perform_en_passant state.board src dest curr_color in
       let game_over = check_mate new_board || stale_mate new_board in
       {
         board = new_board;
