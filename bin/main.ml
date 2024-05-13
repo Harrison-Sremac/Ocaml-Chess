@@ -76,9 +76,27 @@ let create_gui board_ref move_queue =
                    Printf.sprintf "%c%d %c%d" (fst src) (snd src) file rank
                  in
                  print_endline ("You clicked " ^ move_str);
-                 flush stdout));
-
-      square_button#misc#show ()
+                 flush stdout;
+                 (* Trigger move processing here *)
+                 let state =
+                   {
+                     board = !board_ref;
+                     turn = White;
+                     game_over = false;
+                     castling = create_initial_castling_rights ();
+                     last_move = None;
+                   }
+                 in
+                 let new_state =
+                   if is_valid_move state.board src dest state.turn then
+                     make_move state src dest state.turn
+                   else (
+                     print_endline "Invalid move. Please try again.";
+                     state)
+                 in
+                 board_ref := new_state.board;
+                 update_gui !board_ref grid;
+                 print_board new_state.board))
     done
   done;
 
@@ -116,9 +134,16 @@ let rec game_loop state board_ref move_queue grid =
         print_endline
           (Printf.sprintf "Processing move from %c%d to %c%d" (fst src)
              (snd src) (fst dest) (snd dest));
-        let new_state = make_move state src dest state.turn in
+        let new_state =
+          if is_valid_move state.board src dest state.turn then
+            make_move state src dest state.turn
+          else (
+            print_endline "Invalid move. Please try again.";
+            state)
+        in
         board_ref := new_state.board;
         update_gui !board_ref grid;
+        print_board new_state.board;
         game_loop new_state board_ref move_queue grid
     | None ->
         print_endline "Invalid input. Please try again.";
