@@ -34,8 +34,8 @@ let rec game_loop state =
         print_endline "Exiting the game.";
         exit 0
     | Some (Move (src, dest)) ->
-        if is_valid_move state.board src dest then begin
-          let new_board = make_move state.board src dest in
+        if is_valid_move state.board src dest state.turn then begin
+          let new_board = make_move state.board src dest state.turn in
           let next_turn = switch_turn state.turn in
           let game_over = check_mate new_board || stale_mate new_board in
           let updated_state =

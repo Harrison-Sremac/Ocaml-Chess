@@ -15,9 +15,9 @@ let switch_turn turn =
   | Types.Black -> Types.White
 
 (* Make a move on the board, assuming it's a legal move *)
-let make_move state src dest =
-  if Board.is_valid_move state.board src dest then
-    let new_board = Board.make_move state.board src dest in
+let make_move state src dest curr_color =
+  if Board.is_valid_move state.board src dest curr_color then
+    let new_board = Board.make_move state.board src dest curr_color in
     {
       board = new_board;
       turn = switch_turn state.turn;

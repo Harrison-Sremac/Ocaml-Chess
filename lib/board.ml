@@ -67,16 +67,18 @@ let board_to_string board =
 
 (* Checks if a move is valid by ensuring it is one of the possible moves for the
    piece at src *)
-let is_valid_move board src dest =
+let is_valid_move board src dest curr_color =
   match List.assoc_opt src board with
   | Some (piece, color) ->
-      let moves = Pieces.possible_moves piece color src board in
-      List.exists (fun (_, end_pos) -> end_pos = dest) moves
+      if color = curr_color then
+        let moves = Pieces.possible_moves piece color src board in
+        List.exists (fun (_, end_pos) -> end_pos = dest) moves
+      else false
   | None -> false
 
 (* Moves a piece from source to destination, returning the new board state *)
-let make_move board src dest =
-  if is_valid_move board src dest then
+let make_move board src dest curr_color =
+  if is_valid_move board src dest curr_color then
     match List.assoc_opt src board with
     | Some piece ->
         let board_without_src =

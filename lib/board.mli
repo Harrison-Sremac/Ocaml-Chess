@@ -14,10 +14,10 @@ val print_board : board -> unit
 val board_to_string : board -> string
 
 (* Checks if a move from a source to a destination is valid *)
-val is_valid_move : board -> position -> position -> bool
+val is_valid_move : board -> position -> position -> color -> bool
 
 (* Moves a piece from source to destination, returning the new board state *)
-val make_move : board -> position -> position -> board
+val make_move : board -> position -> position -> color -> board
 
 (* Determines if the current board is in a checkmate state *)
 val check_mate : board -> bool

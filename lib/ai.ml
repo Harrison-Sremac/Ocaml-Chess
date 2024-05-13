@@ -28,7 +28,7 @@ let rec minimax board color depth alpha beta maximizing_player =
     if maximizing_player then
       List.fold_left
         (fun acc (src, dest) ->
-          let new_board = Board.make_move board src dest in
+          let new_board = Board.make_move board src dest color in
           let score =
             minimax new_board (Board.switch_turn color) (depth - 1) alpha beta
               false
@@ -38,7 +38,7 @@ let rec minimax board color depth alpha beta maximizing_player =
     else
       List.fold_left
         (fun acc (src, dest) ->
-          let new_board = Board.make_move board src dest in
+          let new_board = Board.make_move board src dest color in
           let score =
             minimax new_board (Board.switch_turn color) (depth - 1) alpha beta
               true
@@ -51,7 +51,7 @@ let best_move board color difficulty =
   let _, best_move =
     List.fold_left
       (fun (max_score, best_move) (src, dest) ->
-        let new_board = Board.make_move board src dest in
+        let new_board = Board.make_move board src dest color in
         let score =
           minimax new_board (Board.switch_turn color) (difficulty - 1) min_int
             max_int false
