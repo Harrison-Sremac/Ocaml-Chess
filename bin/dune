@@ -1,4 +1,4 @@
 (executable
  (name main)
  (public_name cs3110_final_project)
- (libraries chess))
+ (libraries chess lablgtk3))
