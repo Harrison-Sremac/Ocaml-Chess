@@ -10,7 +10,7 @@ let print_welcome_message () =
      to e4.";
   print_endline "Type 'quit' to quit the game."
 
-let create_gui () =
+let create_gui board =
   ignore (GtkMain.Main.init ());
   let window = GWindow.window ~width:400 ~height:400 ~title:"OCaml Chess" () in
   let vbox = GPack.vbox ~packing:window#add () in
@@ -18,6 +18,22 @@ let create_gui () =
 
   let light_color = `RGB (65535, 65535, 65535) in
   let dark_color = `RGB (0, 0, 0) in
+
+  let piece_to_string (piece, color) =
+    match (piece, color) with
+    | King, White -> "♚"
+    | King, Black -> "♔"
+    | Queen, White -> "♛"
+    | Queen, Black -> "♕"
+    | Rook, White -> "♜"
+    | Rook, Black -> "♖"
+    | Bishop, White -> "♝"
+    | Bishop, Black -> "♗"
+    | Knight, White -> "♞"
+    | Knight, Black -> "♘"
+    | Pawn, White -> "♟"
+    | Pawn, Black -> "♙"
+  in
 
   for row = 0 to 7 do
     let hbox = GPack.hbox ~packing:chessboard_box#add () in
@@ -28,6 +44,15 @@ let create_gui () =
       let square_button = GButton.button ~packing:hbox#add () in
       square_button#misc#modify_bg [ (`NORMAL, square_color) ];
       square_button#misc#set_size_request ~width:50 ~height:50 ();
+
+      let file = Char.chr (col + Char.code 'a') in
+      let rank = 8 - row in
+      let position = (file, rank) in
+
+      (match List.assoc_opt position board with
+      | Some piece -> square_button#set_label (piece_to_string piece)
+      | None -> ());
+
       square_button#misc#show ()
     done
   done;
@@ -60,9 +85,9 @@ let rec game_loop state =
         game_loop state)
 
 let main () =
-  create_gui ();
-  print_welcome_message ();
   let initial_state = init_game () in
+  create_gui initial_state.board;
+  print_welcome_message ();
   game_loop initial_state
 
 let () = main ()
