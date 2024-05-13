@@ -155,8 +155,14 @@ let main () =
   let board_ref = ref initial_state.board in
   let move_queue = Queue.create () in
   let grid = create_gui board_ref move_queue in
-  let gui_thread = Thread.create (fun () -> GMain.Main.main ()) () in
-  game_loop initial_state board_ref move_queue grid;
-  Thread.join gui_thread
+
+  (* Run the game loop in a separate thread *)
+  ignore
+    (Thread.create
+       (fun () -> game_loop initial_state board_ref move_queue grid)
+       ());
+
+  (* Run the GTK main loop in the main thread *)
+  GMain.Main.main ()
 
 let () = main ()
