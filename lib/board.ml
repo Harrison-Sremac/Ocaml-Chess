@@ -100,7 +100,8 @@ let promote_pawn board pos color =
     | "Knight" -> Knight
     | _ -> Queen
   in
-  (pos, (piece, color)) :: List.filter (fun (p, _) -> p <> pos) board
+  let board_without_pawn = List.filter (fun (p, _) -> p <> pos) board in
+  (pos, (piece, color)) :: board_without_pawn
 
 let check_mate _board = false
 let stale_mate _board = false
