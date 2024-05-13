@@ -7,7 +7,7 @@ let print_welcome_message () =
   print_endline "Welcome to OCaml Chess!";
   print_endline
     "Instructions: Enter moves in the format 'e2 e4' to move a piece from e2 \
-     to e4.";
+     to e4, or click on squares to move pieces.";
   print_endline "Type 'quit' to quit the game."
 
 let piece_to_string (piece, color) =
@@ -30,9 +30,8 @@ let update_gui board grid =
     for col = 0 to 7 do
       let file = Char.chr (col + Char.code 'a') in
       let rank = 8 - row in
-      let position = (file, rank) in
       let button = grid.(row).(col) in
-      match List.assoc_opt position board with
+      match List.assoc_opt (file, rank) board with
       | Some piece -> button#set_label (piece_to_string piece)
       | None -> button#set_label ""
     done
@@ -59,6 +58,15 @@ let create_gui board_ref =
       square_button#misc#modify_bg [ (`NORMAL, square_color) ];
       square_button#misc#set_size_request ~width:50 ~height:50 ();
       grid.(row).(col) <- square_button;
+
+      let file = Char.chr (col + Char.code 'a') in
+      let rank = 8 - row in
+
+      ignore
+        (square_button#connect#clicked ~callback:(fun () ->
+             Printf.printf "You clicked %c%d\n" file rank;
+             flush stdout));
+
       square_button#misc#show ()
     done
   done;
@@ -76,7 +84,7 @@ let create_gui board_ref =
          true (* Continue calling this function *)));
   GMain.Main.main ()
 
-let rec game_loop state board_ref =
+let rec game_loop state board_ref move_callback =
   print_board state.board;
   if state.game_over then
     let _, status = check_game_status state in
@@ -86,23 +94,33 @@ let rec game_loop state board_ref =
       (match state.turn with
       | White -> "White's move:"
       | Black -> "Black's move:");
-    match read_move () with
+    match move_callback () with
     | Some Quit ->
         print_endline "Exiting the game.";
         exit 0
     | Some (Move (src, dest)) ->
         let new_state = make_move state src dest state.turn in
         board_ref := new_state.board;
-        game_loop new_state board_ref
+        game_loop new_state board_ref move_callback
     | None ->
         print_endline "Invalid input. Please try again.";
-        game_loop state board_ref)
+        game_loop state board_ref move_callback)
 
 let main () =
   print_welcome_message ();
   let initial_state = init_game () in
   let board_ref = ref initial_state.board in
+  let move_queue = Queue.create () in
+
+  let move_callback () =
+    if Queue.is_empty move_queue then
+      match read_move () with
+      | Some move -> Some move
+      | None -> None
+    else Some (Queue.take move_queue)
+  in
+
   ignore (Thread.create (fun () -> create_gui board_ref) ());
-  game_loop initial_state board_ref
+  game_loop initial_state board_ref move_callback
 
 let () = main ()
