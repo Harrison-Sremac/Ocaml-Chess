@@ -37,7 +37,7 @@ let update_gui board grid =
     done
   done
 
-let create_gui board_ref =
+let create_gui board_ref move_queue =
   ignore (GtkMain.Main.init ());
   let window = GWindow.window ~width:400 ~height:400 ~title:"OCaml Chess" () in
   let vbox = GPack.vbox ~packing:window#add () in
@@ -47,6 +47,8 @@ let create_gui board_ref =
   let dark_color = `RGB (0, 0, 0) in
 
   let grid = Array.make_matrix 8 8 (GButton.button ()) in
+
+  let selected = ref None in
 
   for row = 0 to 7 do
     let hbox = GPack.hbox ~packing:chessboard_box#add () in
@@ -64,8 +66,17 @@ let create_gui board_ref =
 
       ignore
         (square_button#connect#clicked ~callback:(fun () ->
-             Printf.printf "You clicked %c%d\n" file rank;
-             flush stdout));
+             match !selected with
+             | None -> selected := Some (file, rank)
+             | Some src ->
+                 selected := None;
+                 let dest = (file, rank) in
+                 Queue.add (Move (src, dest)) move_queue;
+                 let move_str =
+                   Printf.sprintf "%c%d %c%d" (fst src) (snd src) file rank
+                 in
+                 print_endline ("You clicked " ^ move_str);
+                 flush stdout));
 
       square_button#misc#show ()
     done
@@ -77,14 +88,13 @@ let create_gui board_ref =
   window#show ();
 
   let update_interval = 100 in
-  (* Update every 100 milliseconds *)
   ignore
     (GMain.Timeout.add ~ms:update_interval ~callback:(fun () ->
          update_gui !board_ref grid;
-         true (* Continue calling this function *)));
-  GMain.Main.main ()
+         true));
+  grid
 
-let rec game_loop state board_ref move_callback =
+let rec game_loop state board_ref move_queue grid =
   print_board state.board;
   if state.game_over then
     let _, status = check_game_status state in
@@ -94,33 +104,34 @@ let rec game_loop state board_ref move_callback =
       (match state.turn with
       | White -> "White's move:"
       | Black -> "Black's move:");
-    match move_callback () with
+    let move =
+      if Queue.is_empty move_queue then read_move ()
+      else Some (Queue.take move_queue)
+    in
+    match move with
     | Some Quit ->
         print_endline "Exiting the game.";
         exit 0
     | Some (Move (src, dest)) ->
+        print_endline
+          (Printf.sprintf "Processing move from %c%d to %c%d" (fst src)
+             (snd src) (fst dest) (snd dest));
         let new_state = make_move state src dest state.turn in
         board_ref := new_state.board;
-        game_loop new_state board_ref move_callback
+        update_gui !board_ref grid;
+        game_loop new_state board_ref move_queue grid
     | None ->
         print_endline "Invalid input. Please try again.";
-        game_loop state board_ref move_callback)
+        game_loop state board_ref move_queue grid)
 
 let main () =
   print_welcome_message ();
   let initial_state = init_game () in
   let board_ref = ref initial_state.board in
   let move_queue = Queue.create () in
-
-  let move_callback () =
-    if Queue.is_empty move_queue then
-      match read_move () with
-      | Some move -> Some move
-      | None -> None
-    else Some (Queue.take move_queue)
-  in
-
-  ignore (Thread.create (fun () -> create_gui board_ref) ());
-  game_loop initial_state board_ref move_callback
+  let grid = create_gui board_ref move_queue in
+  let gui_thread = Thread.create (fun () -> GMain.Main.main ()) () in
+  game_loop initial_state board_ref move_queue grid;
+  Thread.join gui_thread
 
 let () = main ()
