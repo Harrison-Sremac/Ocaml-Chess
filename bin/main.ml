@@ -10,7 +10,35 @@ let print_welcome_message () =
      to e4.";
   print_endline "Type 'quit' to quit the game."
 
-let create_gui board =
+let piece_to_string (piece, color) =
+  match (piece, color) with
+  | King, White -> "♚"
+  | King, Black -> "♔"
+  | Queen, White -> "♛"
+  | Queen, Black -> "♕"
+  | Rook, White -> "♜"
+  | Rook, Black -> "♖"
+  | Bishop, White -> "♝"
+  | Bishop, Black -> "♗"
+  | Knight, White -> "♞"
+  | Knight, Black -> "♘"
+  | Pawn, White -> "♟"
+  | Pawn, Black -> "♙"
+
+let update_gui board grid =
+  for row = 0 to 7 do
+    for col = 0 to 7 do
+      let file = Char.chr (col + Char.code 'a') in
+      let rank = 8 - row in
+      let position = (file, rank) in
+      let button = grid.(row).(col) in
+      match List.assoc_opt position board with
+      | Some piece -> button#set_label (piece_to_string piece)
+      | None -> button#set_label ""
+    done
+  done
+
+let create_gui board_ref =
   ignore (GtkMain.Main.init ());
   let window = GWindow.window ~width:400 ~height:400 ~title:"OCaml Chess" () in
   let vbox = GPack.vbox ~packing:window#add () in
@@ -19,21 +47,7 @@ let create_gui board =
   let light_color = `RGB (65535, 65535, 65535) in
   let dark_color = `RGB (0, 0, 0) in
 
-  let piece_to_string (piece, color) =
-    match (piece, color) with
-    | King, White -> "♚"
-    | King, Black -> "♔"
-    | Queen, White -> "♛"
-    | Queen, Black -> "♕"
-    | Rook, White -> "♜"
-    | Rook, Black -> "♖"
-    | Bishop, White -> "♝"
-    | Bishop, Black -> "♗"
-    | Knight, White -> "♞"
-    | Knight, Black -> "♘"
-    | Pawn, White -> "♟"
-    | Pawn, Black -> "♙"
-  in
+  let grid = Array.make_matrix 8 8 (GButton.button ()) in
 
   for row = 0 to 7 do
     let hbox = GPack.hbox ~packing:chessboard_box#add () in
@@ -44,26 +58,25 @@ let create_gui board =
       let square_button = GButton.button ~packing:hbox#add () in
       square_button#misc#modify_bg [ (`NORMAL, square_color) ];
       square_button#misc#set_size_request ~width:50 ~height:50 ();
-
-      let file = Char.chr (col + Char.code 'a') in
-      let rank = 8 - row in
-      let position = (file, rank) in
-
-      (match List.assoc_opt position board with
-      | Some piece -> square_button#set_label (piece_to_string piece)
-      | None -> ());
-
+      grid.(row).(col) <- square_button;
       square_button#misc#show ()
     done
   done;
 
   let button = GButton.button ~label:"Quit" ~packing:vbox#add () in
-  ignore (button#connect#clicked ~callback:(fun () -> GMain.quit ()));
-  ignore (window#connect#destroy ~callback:GMain.quit);
+  ignore (button#connect#clicked ~callback:(fun () -> window#destroy ()));
+  ignore (window#connect#destroy ~callback:(fun () -> GMain.quit ()));
   window#show ();
+
+  let update_interval = 100 in
+  (* Update every 100 milliseconds *)
+  ignore
+    (GMain.Timeout.add ~ms:update_interval ~callback:(fun () ->
+         update_gui !board_ref grid;
+         true (* Continue calling this function *)));
   GMain.Main.main ()
 
-let rec game_loop state =
+let rec game_loop state board_ref =
   print_board state.board;
   if state.game_over then
     let _, status = check_game_status state in
@@ -79,15 +92,17 @@ let rec game_loop state =
         exit 0
     | Some (Move (src, dest)) ->
         let new_state = make_move state src dest state.turn in
-        game_loop new_state
+        board_ref := new_state.board;
+        game_loop new_state board_ref
     | None ->
         print_endline "Invalid input. Please try again.";
-        game_loop state)
+        game_loop state board_ref)
 
 let main () =
-  let initial_state = init_game () in
-  create_gui initial_state.board;
   print_welcome_message ();
-  game_loop initial_state
+  let initial_state = init_game () in
+  let board_ref = ref initial_state.board in
+  ignore (Thread.create (fun () -> create_gui board_ref) ());
+  game_loop initial_state board_ref
 
 let () = main ()
