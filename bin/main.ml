@@ -116,7 +116,8 @@ let create_gui board_ref move_queue =
                  flush stdout;
                  (* Process the move regardless of validity *)
                  Queue.add (Move (src, dest)) move_queue;
-                 if is_valid_move !st.board src dest !st.turn then (
+                 let valid = is_valid_move !st.board src dest !st.turn in
+                 if valid then (
                    let new_state = make_move !st src dest !st.turn in
                    st := new_state;
                    board_ref := !st.board;
@@ -126,7 +127,10 @@ let create_gui board_ref move_queue =
                    (* Update destination square *)
                    print_board !st.board)
                  else print_endline "Invalid move. Please try again.";
-                 print_board !st.board))
+                 print_endline "Board after move: ";
+                 print_board !st.board;
+                 print_endline ("Valid move: " ^ string_of_bool valid);
+                 flush stdout))
     done
   done;
 
@@ -180,9 +184,9 @@ let rec game_loop state board_ref move_queue grid =
         print_endline
           (Printf.sprintf "Processing move from %c%d to %c%d" (fst src)
              (snd src) (fst dest) (snd dest));
+        let valid = is_valid_move state.board src dest state.turn in
         let new_state =
-          if is_valid_move state.board src dest state.turn then
-            make_move state src dest state.turn
+          if valid then make_move state src dest state.turn
           else (
             print_endline "Invalid move. Please try again.";
             state)
@@ -192,7 +196,10 @@ let rec game_loop state board_ref move_queue grid =
         (* Clear source square *)
         update_square grid dest (List.assoc_opt dest !board_ref);
         (* Update destination square *)
+        print_endline "Board after move: ";
         print_board new_state.board;
+        print_endline ("Valid move: " ^ string_of_bool valid);
+        flush stdout;
         game_loop new_state board_ref move_queue grid
     | None ->
         print_endline "Invalid input. Please try again.";
