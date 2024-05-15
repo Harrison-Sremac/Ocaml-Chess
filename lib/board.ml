@@ -103,8 +103,17 @@ let promote_pawn board pos color =
   let board_without_pawn = List.filter (fun (p, _) -> p <> pos) board in
   (pos, (piece, color)) :: board_without_pawn
 
-let check_mate _board = false
-let stale_mate _board = false
+let king_in_check board color =
+  let king_pos =
+    List.find (fun (_, (piece, c)) -> piece = King && c = color) board |> fst
+  in
+  List.exists
+    (fun (pos, (piece, c)) ->
+      c <> color
+      && List.exists
+           (fun (_, end_pos) -> end_pos = king_pos)
+           (Pieces.possible_moves piece c pos board))
+    board
 
 let all_possible_moves board color =
   List.fold_left
@@ -114,6 +123,26 @@ let all_possible_moves board color =
         List.append piece_moves acc
       else acc)
     [] board
+
+let check_mate board color =
+  if king_in_check board color then
+    let moves = all_possible_moves board color in
+    List.for_all
+      (fun (src, dest) ->
+        let new_board = make_move board src dest color in
+        king_in_check new_board color)
+      moves
+  else false
+
+let stale_mate board color =
+  (not (king_in_check board color))
+  &&
+  let moves = all_possible_moves board color in
+  List.for_all
+    (fun (src, dest) ->
+      let new_board = make_move board src dest color in
+      king_in_check new_board color)
+    moves
 
 let switch_turn color =
   match color with

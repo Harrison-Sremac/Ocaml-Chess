@@ -11,6 +11,10 @@ type game_state = {
 val init_game : unit -> game_state
 
 val make_move :
-  game_state -> Board.position -> Board.position -> Types.color -> game_state
+  game_state ->
+  Board.position ->
+  Board.position ->
+  Types.color ->
+  game_state * string
 
 val check_game_status : game_state -> bool * string

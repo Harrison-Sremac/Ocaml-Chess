@@ -1,3 +1,7 @@
+type user_command =
+  | Move of (char * int) * (char * int)
+  | Quit
+
 (* Helper function to parse a single chess position from a string like "e2" *)
 let parse_position input =
   if String.length input = 2 then
@@ -7,10 +11,6 @@ let parse_position input =
       Some (file, Char.code rank - Char.code '0')
     else None
   else None
-
-type user_command =
-  | Move of (char * int) * (char * int)
-  | Quit
 
 (* Reads a move or a quit command from standard input *)
 let read_move () =

@@ -118,7 +118,7 @@ let create_gui board_ref move_queue =
                  Queue.add (Move (src, dest)) move_queue;
                  let valid = is_valid_move !st.board src dest !st.turn in
                  if valid then (
-                   let new_state = make_move !st src dest !st.turn in
+                   let new_state, _ = make_move !st src dest !st.turn in
                    st := new_state;
                    board_ref := !st.board;
                    update_square grid src None;
@@ -185,22 +185,22 @@ let rec game_loop state board_ref move_queue grid =
           (Printf.sprintf "Processing move from %c%d to %c%d" (fst src)
              (snd src) (fst dest) (snd dest));
         let valid = is_valid_move state.board src dest state.turn in
-        let new_state =
-          if valid then make_move state src dest state.turn
-          else (
-            print_endline "Invalid move. Please try again.";
-            state)
-        in
-        board_ref := new_state.board;
-        update_square grid src None;
-        (* Clear source square *)
-        update_square grid dest (List.assoc_opt dest !board_ref);
-        (* Update destination square *)
-        print_endline "Board after move: ";
-        print_board new_state.board;
-        print_endline ("Valid move: " ^ string_of_bool valid);
-        flush stdout;
-        game_loop new_state board_ref move_queue grid
+        if valid then (
+          let new_state, status = make_move state src dest state.turn in
+          board_ref := new_state.board;
+          update_square grid src None;
+          (* Clear source square *)
+          update_square grid dest (List.assoc_opt dest !board_ref);
+          (* Update destination square *)
+          print_endline "Board after move: ";
+          print_board new_state.board;
+          print_endline ("Valid move: " ^ string_of_bool valid);
+          if new_state.game_over then print_endline ("Game over! " ^ status);
+          flush stdout;
+          game_loop new_state board_ref move_queue grid)
+        else (
+          print_endline "Invalid move. Please try again.";
+          game_loop state board_ref move_queue grid)
     | None ->
         print_endline "Invalid input. Please try again.";
         game_loop state board_ref move_queue grid)
