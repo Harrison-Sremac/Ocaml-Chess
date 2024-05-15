@@ -96,6 +96,29 @@ let test_knight_move _ =
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
 
+let test_rook_move _ =
+  let board = initialize_board () in
+  let board = make_move board ('a', 2) ('a', 4) White in
+  let valid_moves = rook_moves White ('a', 1) board in
+  let expected_moves = [ (('a', 1), ('a', 3)); (('a', 1), ('a', 2)) ] in
+  assert_equal
+    (List.sort compare valid_moves)
+    (List.sort compare expected_moves)
+
+let test_bishop_move _ =
+  let board = initialize_board () in
+  let board = make_move board ('a', 2) ('a', 4) White in
+  let board = make_move board ('b', 7) ('b', 6) Black in
+  let board = make_move board ('b', 2) ('b', 4) White in
+  let board = make_move board ('c', 7) ('c', 6) Black in
+  let board = make_move board ('c', 2) ('c', 4) White in
+  let board = make_move board ('d', 7) ('d', 6) Black in
+  let valid_moves = bishop_moves White ('c', 1) board in
+  let expected_moves = [ (('c', 1), ('b', 2)); (('c', 1), ('a', 3)) ] in
+  assert_equal
+    (List.sort compare valid_moves)
+    (List.sort compare expected_moves)
+
 let test_castling _ =
   print_endline "castle";
   let board = initialize_board () in
@@ -108,19 +131,13 @@ let test_castling _ =
   let board = make_move board ('f', 8) ('c', 5) Black in
   let board = make_move board ('d', 2) ('d', 3) White in
   let board = make_move board ('e', 8) ('f', 8) Black in
-  let valid_moves = king_moves White ('h', 1) board in
+  let valid_moves = king_moves White ('e', 1) board in
   let expected_moves =
     [
-      (('e', 2), ('d', 1));
-      (('e', 2), ('d', 2));
-      (('e', 2), ('e', 1));
-      (('e', 2), ('e', 3));
-      (('e', 2), ('f', 1));
-      (('e', 2), ('f', 2));
-      (('e', 2), ('c', 2));
-      (* Castling move *)
-      (('e', 2), ('g', 2));
-      (* Castling move *)
+      (('e', 1), ('e', 2));
+      (('e', 1), ('d', 2));
+      (('e', 1), ('f', 1));
+      (('e', 1), ('g', 1));
     ]
   in
   List.iter
@@ -204,6 +221,8 @@ let suite =
          "test_invalid_pawn_move" >:: test_invalid_pawn_move;
          "test_invalid_knight_move" >:: test_invalid_knight_move;
          "chess_output" >:: chess_output;
+         "test_rook_move" >:: test_rook_move;
+         "test_bishop_move" >:: test_bishop_move;
        ]
 
 let () = run_test_tt_main suite
