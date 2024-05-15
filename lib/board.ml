@@ -39,18 +39,18 @@ let board_to_string board =
     (fun ((file, rank), (piece, color)) ->
       let symbol =
         match (piece, color) with
-        | King, White -> "♚"
-        | King, Black -> "♔"
-        | Queen, White -> "♛"
-        | Queen, Black -> "♕"
-        | Rook, White -> "♜"
-        | Rook, Black -> "♖"
-        | Bishop, White -> "♝"
-        | Bishop, Black -> "♗"
-        | Knight, White -> "♞"
-        | Knight, Black -> "♘"
-        | Pawn, White -> "♟"
-        | Pawn, Black -> "♙"
+        | King, White -> "♔"
+        | King, Black -> "♚"
+        | Queen, White -> "♕"
+        | Queen, Black -> "♛"
+        | Rook, White -> "♖"
+        | Rook, Black -> "♜"
+        | Bishop, White -> "♗"
+        | Bishop, Black -> "♝"
+        | Knight, White -> "♘"
+        | Knight, Black -> "♞"
+        | Pawn, White -> "♙"
+        | Pawn, Black -> "♟"
       in
       rows.(8 - rank).(Char.code file - Char.code 'a') <- symbol)
     board;
