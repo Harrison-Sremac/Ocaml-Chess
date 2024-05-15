@@ -105,16 +105,20 @@ let test_castling _ =
   let board = initialize_board () in
   (* Clear path and move king and rook *)
   let board = make_move board ('e', 2) ('e', 3) White in
-  let board = make_move board ('f', 1) ('e', 2) White in
-  let board = make_move board ('g', 1) ('f', 3) White in
-  let valid_moves = king_moves White ('e', 1) board in
+  let board = make_move board ('e', 1) ('e', 2) White in
+  let board = make_move board ('g', 1) ('g', 2) White in
+  let board = make_move board ('f', 1) ('g', 1) White in
+  let valid_moves = king_moves White ('e', 2) board in
   let expected_moves =
     [
-      (('e', 1), ('d', 1));
-      (('e', 1), ('d', 2));
-      (('e', 1), ('f', 1));
-      (('e', 1), ('c', 1));
-      (('e', 1), ('g', 1));
+      (('e', 2), ('d', 1));
+      (('e', 2), ('d', 2));
+      (('e', 2), ('e', 1));
+      (('e', 2), ('e', 3));
+      (('e', 2), ('f', 1));
+      (('e', 2), ('f', 2));
+      (('e', 2), ('c', 2));
+      (('e', 2), ('g', 2));
     ]
   in
   assert_equal
@@ -128,7 +132,7 @@ let test_en_passant _ =
   let board = make_move board ('e', 4) ('e', 5) White in
   let board = make_move board ('d', 5) ('d', 4) Black in
   let valid_moves = pawn_moves White ('e', 5) board in
-  let expected_moves = [ (('e', 5), ('d', 6)) ] in
+  let expected_moves = [ (('e', 5), ('e', 6)); (('e', 5), ('d', 6)) ] in
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
