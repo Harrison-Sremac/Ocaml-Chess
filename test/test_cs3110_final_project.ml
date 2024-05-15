@@ -100,17 +100,15 @@ let test_castling _ =
   print_endline "castle";
   let board = initialize_board () in
   (* Clear path and move king and rook *)
-  let board = make_move board ('e', 2) ('e', 3) White in
-  let board = make_move board ('a', 7) ('a', 6) Black in
-  let board = make_move board ('e', 1) ('e', 2) White in
-  let board = make_move board ('b', 7) ('b', 6) Black in
-  let board = make_move board ('g', 2) ('g', 3) White in
-  let board = make_move board ('h', 7) ('h', 6) Black in
-  let board = make_move board ('g', 1) ('g', 2) White in
-  let board = make_move board ('c', 7) ('c', 6) Black in
-  let board = make_move board ('f', 1) ('g', 1) White in
-  let board = make_move board ('d', 7) ('d', 6) Black in
-  let valid_moves = king_moves White ('e', 2) board in
+  let board = make_move board ('e', 2) ('e', 4) White in
+  let board = make_move board ('e', 7) ('e', 5) Black in
+  let board = make_move board ('g', 1) ('f', 3) White in
+  let board = make_move board ('g', 8) ('f', 6) Black in
+  let board = make_move board ('f', 1) ('c', 4) White in
+  let board = make_move board ('f', 8) ('c', 5) Black in
+  let board = make_move board ('d', 2) ('d', 3) White in
+  let board = make_move board ('e', 8) ('f', 8) Black in
+  let valid_moves = king_moves White ('h', 1) board in
   let expected_moves =
     [
       (('e', 2), ('d', 1));

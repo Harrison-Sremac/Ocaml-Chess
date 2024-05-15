@@ -24,8 +24,25 @@ let king_moves color (file, rank) board =
           if piece_color <> color then Some new_pos else None
     else None
   in
-  directions |> List.filter_map make_move
-  |> List.map (fun dest -> ((file, rank), dest))
+  let regular_moves =
+    directions |> List.filter_map make_move
+    |> List.map (fun dest -> ((file, rank), dest))
+  in
+
+  (* Check for castling moves *)
+  let castling_moves =
+    let can_castle_kingside = true in
+    let can_castle_queenside = true in
+    let kingside_move =
+      if can_castle_kingside then [ ((file, rank), ('g', rank)) ] else []
+    in
+    let queenside_move =
+      if can_castle_queenside then [ ((file, rank), ('c', rank)) ] else []
+    in
+    kingside_move @ queenside_move
+  in
+
+  regular_moves @ castling_moves
 
 let linear_moves color (file, rank) board directions =
   let rec add_moves pos direction acc =
