@@ -7,21 +7,24 @@ let is_castling_move src dest piece =
       let file1, rank1 = src in
       let file2, rank2 = dest in
       rank1 = rank2
-      && (file2 = char_of_int (Char.code file1 + 2)
-         || file2 = char_of_int (Char.code file1 - 2))
+      && (file2 = Char.chr (Char.code file1 + 2) (* kingside castling *)
+         || file2 = Char.chr (Char.code file1 - 2))
+      (* queenside castling *)
   | _ -> false
 
 let perform_castling board src dest color =
   let king_file, rank = src in
   let new_king_pos, old_rook_pos, new_rook_pos =
-    if dest = ('g', rank) then
-      ( (char_of_int (Char.code king_file + 2), rank),
-        ('h', rank),
-        (char_of_int (Char.code king_file + 1), rank) )
-    else if dest = ('c', rank) then
-      ( (char_of_int (Char.code king_file - 2), rank),
-        ('a', rank),
-        (char_of_int (Char.code king_file - 1), rank) )
+    if dest = (Char.chr (Char.code king_file + 2), rank) then
+      (* kingside *)
+      ( (Char.chr (Char.code king_file + 2), rank),
+        (Char.chr (Char.code king_file + 3), rank),
+        (Char.chr (Char.code king_file + 1), rank) )
+    else if dest = (Char.chr (Char.code king_file - 2), rank) then
+      (* queenside *)
+      ( (Char.chr (Char.code king_file - 2), rank),
+        (Char.chr (Char.code king_file - 4), rank),
+        (Char.chr (Char.code king_file - 1), rank) )
     else failwith "Invalid castling move"
   in
   let board_without_pieces =
@@ -116,10 +119,20 @@ let make_move state src dest curr_color =
         last_move = Some (src, dest);
       }
   | Some (Pawn, _) when snd dest = 8 || snd dest = 1 ->
-      let board_without_pawn =
-        List.filter (fun (p, _) -> p <> src) state.board
-      in
-      let new_board = promote_pawn board_without_pawn dest curr_color in
+      let new_board = promote_pawn state.board dest curr_color in
+      let game_over = check_mate new_board || stale_mate new_board in
+      {
+        board = new_board;
+        turn =
+          (match curr_color with
+          | Types.White -> Types.Black
+          | Types.Black -> Types.White);
+        game_over;
+        castling = state.castling;
+        last_move = Some (src, dest);
+      }
+  | Some (piece, _) when is_valid_move state.board src dest curr_color ->
+      let new_board = Board.make_move state.board src dest curr_color in
       let game_over = check_mate new_board || stale_mate new_board in
       {
         board = new_board;
@@ -132,19 +145,5 @@ let make_move state src dest curr_color =
         last_move = Some (src, dest);
       }
   | _ ->
-      if is_valid_move state.board src dest curr_color then
-        let new_board = Board.make_move state.board src dest curr_color in
-        let game_over = check_mate new_board || stale_mate new_board in
-        {
-          board = new_board;
-          turn =
-            (match curr_color with
-            | Types.White -> Types.Black
-            | Types.Black -> Types.White);
-          game_over;
-          castling = state.castling;
-          last_move = Some (src, dest);
-        }
-      else (
-        print_endline "Invalid move. Please try again.";
-        state)
+      print_endline "Invalid move. Please try again.";
+      state

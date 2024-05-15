@@ -25,16 +25,24 @@ let piece_to_string (piece, color) =
   | Pawn, White -> "♙"
   | Pawn, Black -> "♟"
 
+let update_square grid (file, rank) piece_opt =
+  let row = 8 - rank in
+  (* Convert rank to row index *)
+  let col = Char.code file - Char.code 'a' in
+  (* Convert file to column index *)
+  let button = grid.(row).(col) in
+  match piece_opt with
+  | Some piece -> button#set_label (piece_to_string piece)
+  | None -> button#set_label ""
+
 let update_gui board grid =
   for row = 0 to 7 do
     for col = 0 to 7 do
       let file = Char.chr (col + Char.code 'a') in
-      let rank = row + 1 in
-      (* Normal rank calculation *)
-      let button = grid.(row).(col) in
-      match List.assoc_opt (file, rank) board with
-      | Some piece -> button#set_label (piece_to_string piece)
-      | None -> button#set_label ""
+      let rank = 8 - row in
+      (* Correct the rank calculation to match the board setup *)
+      let piece_opt = List.assoc_opt (file, rank) board in
+      update_square grid (file, rank) piece_opt
     done
   done
 
@@ -71,13 +79,13 @@ let create_gui board_ref move_queue =
       let square_button = GButton.button ~packing:hbox#add () in
       square_button#misc#modify_bg [ (`NORMAL, square_color) ];
       square_button#misc#set_size_request ~width:50 ~height:50 ();
-      grid.(7 - row).(col) <- square_button;
+      grid.(row).(col) <- square_button;
 
-      (* Reverse row order *)
+      (* Correct the row order *)
       let file = Char.chr (col + Char.code 'a') in
       let rank = 8 - row in
 
-      (* Reverse rank calculation *)
+      (* Correct the rank calculation *)
       ignore
         (square_button#connect#clicked ~callback:(fun () ->
              match !selected with
@@ -96,23 +104,24 @@ let create_gui board_ref move_queue =
                    let new_state = make_move !st src dest !st.turn in
                    st := new_state;
                    board_ref := !st.board;
-                   update_gui !board_ref grid;
+                   update_square grid src None;
+                   (* Clear source square *)
+                   update_square grid dest (List.assoc_opt dest !board_ref);
+                   (* Update destination square *)
                    print_board !st.board)
                  else print_endline "Invalid move. Please try again.";
                  print_board !st.board))
     done
   done;
 
+  (* Initial GUI update to display the initial board setup *)
+  update_gui !board_ref grid;
+
   let button = GButton.button ~label:"Quit" ~packing:vbox#add () in
   ignore (button#connect#clicked ~callback:(fun () -> window#destroy ()));
   ignore (window#connect#destroy ~callback:(fun () -> GMain.quit ()));
   window#show ();
 
-  let update_interval = 100 in
-  ignore
-    (GMain.Timeout.add ~ms:update_interval ~callback:(fun () ->
-         update_gui !board_ref grid;
-         true));
   grid
 
 let rec game_loop state board_ref move_queue grid =
@@ -145,7 +154,10 @@ let rec game_loop state board_ref move_queue grid =
             state)
         in
         board_ref := new_state.board;
-        update_gui !board_ref grid;
+        update_square grid src None;
+        (* Clear source square *)
+        update_square grid dest (List.assoc_opt dest !board_ref);
+        (* Update destination square *)
         print_board new_state.board;
         game_loop new_state board_ref move_queue grid
     | None ->
