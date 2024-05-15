@@ -9,6 +9,7 @@ let within_board (file, rank) =
   file >= 'a' && file <= 'h' && rank >= 1 && rank <= 8
 
 (* Generate possible moves for a King *)
+(* Generate possible moves for a King *)
 let king_moves color (file, rank) board =
   let directions =
     [ (-1, -1); (0, -1); (1, -1); (-1, 0); (1, 0); (-1, 1); (0, 1); (1, 1) ]
@@ -24,49 +25,8 @@ let king_moves color (file, rank) board =
           if piece_color <> color then Some new_pos else None
     else None
   in
-  let regular_moves =
-    directions |> List.filter_map make_move
-    |> List.map (fun dest -> ((file, rank), dest))
-  in
-  let castling_moves =
-    let can_castle_kingside =
-      let king_has_moved =
-        match List.assoc_opt ('e', rank) board with
-        | Some (_, color)
-          when color = color && rank = if color = White then 1 else 8 -> false
-        | _ -> true
-      and kingside_rook_has_moved =
-        match List.assoc_opt ('h', rank) board with
-        | Some (_, color)
-          when color = color && rank = if color = White then 1 else 8 -> false
-        | _ -> true
-      in
-      king_has_moved && kingside_rook_has_moved
-    in
-    let can_castle_queenside =
-      let king_has_moved =
-        match List.assoc_opt ('e', rank) board with
-        | Some (_, color)
-          when color = color && rank = if color = White then 1 else 8 -> false
-        | _ -> true
-      and queenside_rook_has_moved =
-        match List.assoc_opt ('a', rank) board with
-        | Some (_, color)
-          when color = color && rank = if color = White then 1 else 8 -> false
-        | _ -> true
-      in
-      king_has_moved && queenside_rook_has_moved
-    in
-    let kingside_move =
-      if can_castle_kingside then [ ((file, rank), ('g', rank)) ] else []
-    in
-    let queenside_move =
-      if can_castle_queenside then [ ((file, rank), ('c', rank)) ] else []
-    in
-    kingside_move @ queenside_move
-  in
-
-  regular_moves @ castling_moves
+  List.filter_map make_move directions
+  |> List.map (fun dest -> ((file, rank), dest))
 
 let linear_moves color (file, rank) board directions =
   let rec add_moves pos direction acc =
