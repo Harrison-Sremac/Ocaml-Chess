@@ -59,33 +59,49 @@ let state board_ref =
 let create_gui board_ref move_queue =
   ignore (GMain.init ());
   let st = state board_ref in
-  let window = GWindow.window ~width:400 ~height:400 ~title:"OCaml Chess" () in
+  let window = GWindow.window ~width:500 ~height:500 ~title:"OCaml Chess" () in
   let vbox = GPack.vbox ~packing:window#add () in
-  let chessboard_box = GPack.vbox ~packing:vbox#add () in
+  let chessboard_box =
+    GPack.table ~rows:9 ~columns:9 ~homogeneous:false ~packing:vbox#add ()
+  in
 
   let light_color = `RGB (65535, 65535, 65535) in
-  let dark_color = `RGB (0, 0, 0) in
+  let dark_color = `RGB (32767, 32767, 32767) in
 
   let grid = Array.make_matrix 8 8 (GButton.button ()) in
 
   let selected = ref None in
 
   for row = 0 to 7 do
-    let hbox = GPack.hbox ~packing:chessboard_box#add () in
+    (* Add rank labels on the left side *)
+    ignore
+      (GMisc.label
+         ~text:(string_of_int (8 - row))
+         ~packing:(chessboard_box#attach ~left:0 ~top:(row + 1))
+         ());
     for col = 0 to 7 do
+      (* Add file labels on the top side *)
+      if row = 0 then
+        ignore
+          (GMisc.label
+             ~text:(String.make 1 (Char.chr (col + Char.code 'a')))
+             ~packing:(chessboard_box#attach ~left:(col + 1) ~top:0)
+             ());
       let square_color =
         if (row + col) mod 2 = 0 then light_color else dark_color
       in
-      let square_button = GButton.button ~packing:hbox#add () in
+      let square_button =
+        GButton.button
+          ~packing:(chessboard_box#attach ~left:(col + 1) ~top:(row + 1))
+          ()
+      in
       square_button#misc#modify_bg [ (`NORMAL, square_color) ];
       square_button#misc#set_size_request ~width:50 ~height:50 ();
       grid.(row).(col) <- square_button;
 
-      (* Correct the row order *)
       let file = Char.chr (col + Char.code 'a') in
       let rank = 8 - row in
 
-      (* Correct the rank calculation *)
       ignore
         (square_button#connect#clicked ~callback:(fun () ->
              match !selected with
@@ -112,6 +128,24 @@ let create_gui board_ref move_queue =
                  else print_endline "Invalid move. Please try again.";
                  print_board !st.board))
     done
+  done;
+
+  (* Add file labels on the bottom side *)
+  for col = 0 to 7 do
+    ignore
+      (GMisc.label
+         ~text:(String.make 1 (Char.chr (col + Char.code 'a')))
+         ~packing:(chessboard_box#attach ~left:(col + 1) ~top:9)
+         ())
+  done;
+
+  (* Add rank labels on the right side *)
+  for row = 0 to 7 do
+    ignore
+      (GMisc.label
+         ~text:(string_of_int (8 - row))
+         ~packing:(chessboard_box#attach ~left:9 ~top:(row + 1))
+         ())
   done;
 
   (* Initial GUI update to display the initial board setup *)
