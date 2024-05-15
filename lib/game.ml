@@ -78,11 +78,6 @@ let init_game () =
     last_move = None;
   }
 
-let switch_turn turn =
-  match turn with
-  | Types.White -> Types.Black
-  | Types.Black -> Types.White
-
 let check_game_status state =
   if Board.check_mate state.board then (true, "Checkmate")
   else if Board.stale_mate state.board then (true, "Stalemate")
@@ -97,7 +92,10 @@ let make_move state src dest curr_color =
       let game_over = check_mate new_board || stale_mate new_board in
       {
         board = new_board;
-        turn = switch_turn curr_color;
+        turn =
+          (match curr_color with
+          | Types.White -> Types.Black
+          | Types.Black -> Types.White);
         game_over;
         castling = new_castling_rights;
         last_move = Some (src, dest);
@@ -109,7 +107,10 @@ let make_move state src dest curr_color =
       let game_over = check_mate new_board || stale_mate new_board in
       {
         board = new_board;
-        turn = switch_turn curr_color;
+        turn =
+          (match curr_color with
+          | Types.White -> Types.Black
+          | Types.Black -> Types.White);
         game_over;
         castling = state.castling;
         last_move = Some (src, dest);
@@ -122,7 +123,10 @@ let make_move state src dest curr_color =
       let game_over = check_mate new_board || stale_mate new_board in
       {
         board = new_board;
-        turn = switch_turn curr_color;
+        turn =
+          (match curr_color with
+          | Types.White -> Types.Black
+          | Types.Black -> Types.White);
         game_over;
         castling = state.castling;
         last_move = Some (src, dest);
@@ -133,7 +137,10 @@ let make_move state src dest curr_color =
         let game_over = check_mate new_board || stale_mate new_board in
         {
           board = new_board;
-          turn = switch_turn curr_color;
+          turn =
+            (match curr_color with
+            | Types.White -> Types.Black
+            | Types.Black -> Types.White);
           game_over;
           castling = state.castling;
           last_move = Some (src, dest);

@@ -37,8 +37,19 @@ let update_gui board grid =
     done
   done
 
+let state board_ref =
+  ref
+    {
+      board = !board_ref;
+      turn = White;
+      game_over = false;
+      castling = create_initial_castling_rights ();
+      last_move = None;
+    }
+
 let create_gui board_ref move_queue =
   ignore (GtkMain.Main.init ());
+  let st = state board_ref in
   let window = GWindow.window ~width:400 ~height:400 ~title:"OCaml Chess" () in
   let vbox = GPack.vbox ~packing:window#add () in
   let chessboard_box = GPack.vbox ~packing:vbox#add () in
@@ -78,25 +89,12 @@ let create_gui board_ref move_queue =
                  print_endline ("You clicked " ^ move_str);
                  flush stdout;
                  (* Trigger move processing here *)
-                 let state =
-                   {
-                     board = !board_ref;
-                     turn = White;
-                     game_over = false;
-                     castling = create_initial_castling_rights ();
-                     last_move = None;
-                   }
-                 in
-                 let new_state =
-                   if is_valid_move state.board src dest state.turn then
-                     make_move state src dest state.turn
-                   else (
-                     print_endline "Invalid move. Please try again.";
-                     state)
-                 in
-                 board_ref := new_state.board;
+                 if is_valid_move !st.board src dest !st.turn then
+                   st := make_move !st src dest !st.turn
+                 else print_endline "Invalid move. Please try again.";
+                 board_ref := !st.board;
                  update_gui !board_ref grid;
-                 print_board new_state.board))
+                 print_board !st.board))
     done
   done;
 
