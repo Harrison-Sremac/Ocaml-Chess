@@ -12,24 +12,25 @@ let print_welcome_message () =
 
 let piece_to_string (piece, color) =
   match (piece, color) with
-  | King, White -> "♚"
-  | King, Black -> "♔"
-  | Queen, White -> "♛"
-  | Queen, Black -> "♕"
-  | Rook, White -> "♜"
-  | Rook, Black -> "♖"
-  | Bishop, White -> "♝"
-  | Bishop, Black -> "♗"
-  | Knight, White -> "♞"
-  | Knight, Black -> "♘"
-  | Pawn, White -> "♟"
-  | Pawn, Black -> "♙"
+  | King, White -> "♔"
+  | King, Black -> "♚"
+  | Queen, White -> "♕"
+  | Queen, Black -> "♛"
+  | Rook, White -> "♖"
+  | Rook, Black -> "♜"
+  | Bishop, White -> "♗"
+  | Bishop, Black -> "♝"
+  | Knight, White -> "♘"
+  | Knight, Black -> "♞"
+  | Pawn, White -> "♙"
+  | Pawn, Black -> "♟"
 
 let update_gui board grid =
   for row = 0 to 7 do
     for col = 0 to 7 do
       let file = Char.chr (col + Char.code 'a') in
-      let rank = 8 - row in
+      let rank = row + 1 in
+      (* Normal rank calculation *)
       let button = grid.(row).(col) in
       match List.assoc_opt (file, rank) board with
       | Some piece -> button#set_label (piece_to_string piece)
@@ -48,7 +49,7 @@ let state board_ref =
     }
 
 let create_gui board_ref move_queue =
-  ignore (GtkMain.Main.init ());
+  ignore (GMain.init ());
   let st = state board_ref in
   let window = GWindow.window ~width:400 ~height:400 ~title:"OCaml Chess" () in
   let vbox = GPack.vbox ~packing:window#add () in
@@ -70,11 +71,13 @@ let create_gui board_ref move_queue =
       let square_button = GButton.button ~packing:hbox#add () in
       square_button#misc#modify_bg [ (`NORMAL, square_color) ];
       square_button#misc#set_size_request ~width:50 ~height:50 ();
-      grid.(row).(col) <- square_button;
+      grid.(7 - row).(col) <- square_button;
 
+      (* Reverse row order *)
       let file = Char.chr (col + Char.code 'a') in
       let rank = 8 - row in
 
+      (* Reverse rank calculation *)
       ignore
         (square_button#connect#clicked ~callback:(fun () ->
              match !selected with
@@ -82,18 +85,20 @@ let create_gui board_ref move_queue =
              | Some src ->
                  selected := None;
                  let dest = (file, rank) in
-                 Queue.add (Move (src, dest)) move_queue;
                  let move_str =
                    Printf.sprintf "%c%d %c%d" (fst src) (snd src) file rank
                  in
                  print_endline ("You clicked " ^ move_str);
                  flush stdout;
-                 (* Trigger move processing here *)
-                 if is_valid_move !st.board src dest !st.turn then
-                   st := make_move !st src dest !st.turn
+                 (* Process the move regardless of validity *)
+                 Queue.add (Move (src, dest)) move_queue;
+                 if is_valid_move !st.board src dest !st.turn then (
+                   let new_state = make_move !st src dest !st.turn in
+                   st := new_state;
+                   board_ref := !st.board;
+                   update_gui !board_ref grid;
+                   print_board !st.board)
                  else print_endline "Invalid move. Please try again.";
-                 board_ref := !st.board;
-                 update_gui !board_ref grid;
                  print_board !st.board))
     done
   done;
