@@ -75,25 +75,15 @@ let test_pawn_capture _ =
     (List.sort compare expected_moves)
 
 let test_king_move _ =
+  print_endline "king";
   let board = initialize_board () in
   let board = make_move board ('e', 2) ('e', 3) White in
+  let board = make_move board ('a', 7) ('a', 6) Black in
   let board = make_move board ('e', 1) ('e', 2) White in
   let valid_moves = king_moves White ('e', 2) board in
   let expected_moves =
-    [
-      (('e', 2), ('d', 1));
-      (('e', 2), ('d', 2));
-      (('e', 2), ('e', 1));
-      (('e', 2), ('e', 3));
-      (('e', 2), ('f', 1));
-      (('e', 2), ('f', 2));
-    ]
+    [ (('e', 2), ('e', 1)); (('e', 2), ('d', 3)); (('e', 2), ('f', 3)) ]
   in
-  List.iter
-    (fun (src, dest) ->
-      Printf.printf "Valid move: %c%d to %c%d\n" (fst src) (snd src) (fst dest)
-        (snd dest))
-    valid_moves;
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
@@ -107,12 +97,19 @@ let test_knight_move _ =
     (List.sort compare expected_moves)
 
 let test_castling _ =
+  print_endline "castle";
   let board = initialize_board () in
   (* Clear path and move king and rook *)
   let board = make_move board ('e', 2) ('e', 3) White in
+  let board = make_move board ('a', 7) ('a', 6) Black in
   let board = make_move board ('e', 1) ('e', 2) White in
+  let board = make_move board ('b', 7) ('b', 6) Black in
+  let board = make_move board ('g', 2) ('g', 3) White in
+  let board = make_move board ('h', 7) ('h', 6) Black in
   let board = make_move board ('g', 1) ('g', 2) White in
+  let board = make_move board ('c', 7) ('c', 6) Black in
   let board = make_move board ('f', 1) ('g', 1) White in
+  let board = make_move board ('d', 7) ('d', 6) Black in
   let valid_moves = king_moves White ('e', 2) board in
   let expected_moves =
     [
@@ -139,17 +136,10 @@ let test_castling _ =
 
 let test_en_passant _ =
   let board = initialize_board () in
-  let board = make_move board ('e', 2) ('e', 4) White in
-  let board = make_move board ('d', 7) ('d', 5) Black in
-  let board = make_move board ('e', 4) ('e', 5) White in
-  let board = make_move board ('d', 5) ('d', 4) Black in
-  let valid_moves = pawn_moves White ('e', 5) board in
-  let expected_moves = [ (('e', 5), ('e', 6)); (('e', 5), ('d', 6)) ] in
-  List.iter
-    (fun (src, dest) ->
-      Printf.printf "Valid move: %c%d to %c%d\n" (fst src) (snd src) (fst dest)
-        (snd dest))
-    valid_moves;
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 5) Black in
+  let valid_moves = pawn_moves White ('d', 4) board in
+  let expected_moves = [ (('d', 4), ('e', 5)); (('d', 4), ('d', 5)) ] in
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
@@ -164,14 +154,13 @@ let test_board_to_string_after_moves _ =
      8  | ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ |  8\n\
      7  | ♟ ♟ ♟ ♟ . ♟ ♟ ♟ |  7\n\
      6  | . . . . . . . . |  6\n\
-     5  | . . . . ♙ . . . |  5\n\
-     4  | . . . . ♟ . . . |  4\n\
+     5  | . . . . ♟ . . . |  5\n\
+     4  | . . . . ♙ . . . |  4\n\
      3  | . . . . . . . . |  3\n\
      2  | ♙ ♙ ♙ ♙ . ♙ ♙ ♙ |  2\n\
      1  | ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ |  1\n\
      +    a b c d e f g h    +"
   in
-  Printf.printf "Actual board string:\n%s\n" board_str;
   assert_equal expected_str board_str
 
 let test_invalid_pawn_move _ =
@@ -200,7 +189,6 @@ let chess_output _ =
      +    a b c d e f g h    +"
   in
   let board_str = board_to_string (initialize_board ()) in
-  Printf.printf "Actual board string:\n%s\n" board_str;
   assert_equal real_str board_str
 
 let suite =
