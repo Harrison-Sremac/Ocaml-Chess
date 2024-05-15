@@ -89,6 +89,11 @@ let test_king_move _ =
       (('e', 2), ('f', 2));
     ]
   in
+  List.iter
+    (fun (src, dest) ->
+      Printf.printf "Valid move: %c%d to %c%d\n" (fst src) (snd src) (fst dest)
+        (snd dest))
+    valid_moves;
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
@@ -118,9 +123,16 @@ let test_castling _ =
       (('e', 2), ('f', 1));
       (('e', 2), ('f', 2));
       (('e', 2), ('c', 2));
+      (* Castling move *)
       (('e', 2), ('g', 2));
+      (* Castling move *)
     ]
   in
+  List.iter
+    (fun (src, dest) ->
+      Printf.printf "Valid move: %c%d to %c%d\n" (fst src) (snd src) (fst dest)
+        (snd dest))
+    valid_moves;
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
@@ -133,6 +145,11 @@ let test_en_passant _ =
   let board = make_move board ('d', 5) ('d', 4) Black in
   let valid_moves = pawn_moves White ('e', 5) board in
   let expected_moves = [ (('e', 5), ('e', 6)); (('e', 5), ('d', 6)) ] in
+  List.iter
+    (fun (src, dest) ->
+      Printf.printf "Valid move: %c%d to %c%d\n" (fst src) (snd src) (fst dest)
+        (snd dest))
+    valid_moves;
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
@@ -154,6 +171,7 @@ let test_board_to_string_after_moves _ =
      1  | ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ |  1\n\
      +    a b c d e f g h    +"
   in
+  Printf.printf "Actual board string:\n%s\n" board_str;
   assert_equal expected_str board_str
 
 let test_invalid_pawn_move _ =
@@ -171,17 +189,19 @@ let test_invalid_knight_move _ =
 let chess_output _ =
   let real_str =
     "+    a b c d e f g h    +\n\
-     8  | ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ |  8\n\
-     7  | ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙ |  7\n\
+     8  | ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ |  8\n\
+     7  | ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟ |  7\n\
      6  | . . . . . . . . |  6\n\
      5  | . . . . . . . . |  5\n\
      4  | . . . . . . . . |  4\n\
      3  | . . . . . . . . |  3\n\
-     2  | ♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟ |  2\n\
-     1  | ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ |  1\n\
+     2  | ♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙ |  2\n\
+     1  | ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ |  1\n\
      +    a b c d e f g h    +"
   in
-  assert_equal real_str (board_to_string (initialize_board ()))
+  let board_str = board_to_string (initialize_board ()) in
+  Printf.printf "Actual board string:\n%s\n" board_str;
+  assert_equal real_str board_str
 
 let suite =
   "Chess Tests"

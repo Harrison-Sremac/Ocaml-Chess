@@ -24,7 +24,7 @@ let king_moves color (file, rank) board =
           if piece_color <> color then Some new_pos else None
     else None
   in
-  List.filter_map make_move directions
+  directions |> List.filter_map make_move
   |> List.map (fun dest -> ((file, rank), dest))
 
 let linear_moves color (file, rank) board directions =

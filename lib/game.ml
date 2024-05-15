@@ -7,24 +7,21 @@ let is_castling_move src dest piece =
       let file1, rank1 = src in
       let file2, rank2 = dest in
       rank1 = rank2
-      && (file2 = Char.chr (Char.code file1 + 2) (* kingside castling *)
-         || file2 = Char.chr (Char.code file1 - 2))
-      (* queenside castling *)
+      && (file2 = char_of_int (Char.code file1 + 2)
+         || file2 = char_of_int (Char.code file1 - 2))
   | _ -> false
 
 let perform_castling board src dest color =
   let king_file, rank = src in
   let new_king_pos, old_rook_pos, new_rook_pos =
-    if dest = (Char.chr (Char.code king_file + 2), rank) then
-      (* kingside *)
-      ( (Char.chr (Char.code king_file + 2), rank),
-        (Char.chr (Char.code king_file + 3), rank),
-        (Char.chr (Char.code king_file + 1), rank) )
-    else if dest = (Char.chr (Char.code king_file - 2), rank) then
-      (* queenside *)
-      ( (Char.chr (Char.code king_file - 2), rank),
-        (Char.chr (Char.code king_file - 4), rank),
-        (Char.chr (Char.code king_file - 1), rank) )
+    if dest = ('g', rank) then
+      ( (char_of_int (Char.code king_file + 2), rank),
+        ('h', rank),
+        (char_of_int (Char.code king_file + 1), rank) )
+    else if dest = ('c', rank) then
+      ( (char_of_int (Char.code king_file - 2), rank),
+        ('a', rank),
+        (char_of_int (Char.code king_file - 1), rank) )
     else failwith "Invalid castling move"
   in
   let board_without_pieces =
