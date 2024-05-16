@@ -183,6 +183,33 @@ let test_invalid_knight_move _ =
   assert_bool "Knight should not move to a2"
     (not (List.exists (fun (_, pos) -> pos = ('a', 2)) valid_moves))
 
+let stay_on_board_left _ =
+  let board = initialize_board () in
+  let valid_moves = knight_moves White ('h', 1) board in
+  assert_bool "Rook can't move out of board"
+    (not (List.exists (fun (_, pos) -> pos = ('i', 1)) valid_moves))
+
+let stay_on_board_right _ =
+  let board = initialize_board () in
+  let valid_moves = knight_moves White ('a', 1) board in
+  assert_bool "Rook can't move out of board"
+    (not
+       (List.exists
+          (fun (_, pos) -> pos = (char_of_int (Char.code 'a' - 1), 1))
+          valid_moves))
+
+let stay_on_board_top _ =
+  let board = initialize_board () in
+  let valid_moves = knight_moves White ('h', 1) board in
+  assert_bool "Rook can't move out of board"
+    (not (List.exists (fun (_, pos) -> pos = ('h', 0)) valid_moves))
+
+let stay_on_board_bottom _ =
+  let board = initialize_board () in
+  let valid_moves = knight_moves White ('h', 8) board in
+  assert_bool "Rook can't move out of board"
+    (not (List.exists (fun (_, pos) -> pos = ('h', 9)) valid_moves))
+
 let chess_output _ =
   let real_str =
     "+    a b c d e f g h    +\n\
@@ -198,6 +225,14 @@ let chess_output _ =
   in
   let board_str = board_to_string (initialize_board ()) in
   assert_equal real_str board_str
+
+let spots_with_same_color _ =
+  let board = initialize_board () in
+  assert_equal
+    (List.exists
+       (fun (_, pos) -> pos = ('g', 1))
+       (all_possible_moves board White))
+    false
 
 let test_queen _ =
   let board = initialize_board () in
@@ -284,23 +319,24 @@ let stalemate_true _ =
   let board = initialize_board () in
   let board = make_move board ('c', 2) ('c', 4) White in
   let board = make_move board ('h', 7) ('h', 5) Black in
-  let board = make_move board ('a', 7) ('a', 5) White in
-  let board = make_move board ('d', 1) ('a', 4) Black in
-  let board = make_move board ('a', 8) ('a', 6) White in
-  let board = make_move board ('a', 4) ('a', 5) Black in
-  let board = make_move board ('a', 6) ('h', 6) White in
-  let board = make_move board ('a', 5) ('c', 7) Black in
-  let board = make_move board ('f', 7) ('f', 6) White in
-  let board = make_move board ('c', 7) ('d', 7) Black in
-  let board = make_move board ('e', 8) ('f', 7) White in
-  let board = make_move board ('d', 7) ('b', 7) Black in
-  let board = make_move board ('d', 8) ('d', 3) White in
-  let board = make_move board ('b', 7) ('b', 8) Black in
-  let board = make_move board ('d', 3) ('h', 7) White in
-  let board = make_move board ('b', 8) ('c', 8) Black in
-  let board = make_move board ('f', 7) ('g', 6) White in
+  let board = make_move board ('h', 2) ('h', 4) White in
+  let board = make_move board ('a', 7) ('a', 5) Black in
+  let board = make_move board ('d', 1) ('a', 4) White in
+  let board = make_move board ('a', 8) ('a', 6) Black in
+  let board = make_move board ('a', 4) ('a', 5) White in
+  let board = make_move board ('a', 6) ('h', 6) Black in
+  let board = make_move board ('a', 5) ('c', 7) White in
+  let board = make_move board ('f', 7) ('f', 6) Black in
+  let board = make_move board ('c', 7) ('d', 7) White in
+  let board = make_move board ('e', 8) ('f', 7) Black in
+  let board = make_move board ('d', 7) ('b', 7) White in
+  let board = make_move board ('d', 8) ('d', 3) Black in
+  let board = make_move board ('b', 7) ('b', 8) White in
+  let board = make_move board ('d', 3) ('h', 7) Black in
+  let board = make_move board ('b', 8) ('c', 8) White in
+  let board = make_move board ('f', 7) ('g', 6) Black in
   let board = make_move board ('c', 8) ('e', 6) White in
-  assert_equal (stale_mate board White) true
+  assert_equal (stale_mate board Black) true
 
 let suite =
   "Chess Tests"
@@ -328,6 +364,11 @@ let suite =
          "check_stalemate_false" >:: check_stalemate_false;
          "checkmate_true" >:: checkmate_true;
          "stalemate_true" >:: stalemate_true;
+         "stay_on_board_left" >:: stay_on_board_left;
+         "stay_on_board_bottom" >:: stay_on_board_bottom;
+         "stay_on_board_right" >:: stay_on_board_right;
+         "stay_on_board_top" >:: stay_on_board_top;
+         "spots_with_same_color" >:: spots_with_same_color;
        ]
 
 let () = run_test_tt_main suite

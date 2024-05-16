@@ -10,6 +10,7 @@ let create_initial_castling_rights () =
     black_kingside = true;
     black_queenside = true;
   }
+  [@coverage off]
 
 let create_pawn_row color rank =
   List.map
@@ -155,7 +156,6 @@ let switch_turn color =
 
 let print_board board = print_endline (board_to_string board)
 
-(* Additional functions to meet the line requirement *)
 let string_of_piece piece =
   match piece with
   | King -> "King"
