@@ -64,6 +64,11 @@ let test_pawn_initial_move _ =
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
 
+let test_pawn_num_moves _ =
+  let board = initialize_board () in
+  let valid_moves = pawn_moves White ('e', 2) board in
+  assert_equal (List.length valid_moves) 2
+
 let test_pawn_capture _ =
   let board = initialize_board () in
   let board = make_move board ('e', 2) ('e', 4) White in
@@ -87,6 +92,14 @@ let test_king_move _ =
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
 
+let test_king_num_moves _ =
+  let board = initialize_board () in
+  let board = make_move board ('e', 2) ('e', 3) White in
+  let board = make_move board ('a', 7) ('a', 6) Black in
+  let board = make_move board ('e', 1) ('e', 2) White in
+  let valid_moves = king_moves White ('e', 2) board in
+  assert_equal (List.length valid_moves) 3
+
 let test_knight_move _ =
   let board = initialize_board () in
   let valid_moves = knight_moves White ('b', 1) board in
@@ -94,6 +107,11 @@ let test_knight_move _ =
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
+
+let test_knight_num_moves _ =
+  let board = initialize_board () in
+  let valid_moves = knight_moves White ('b', 1) board in
+  assert_equal (List.length valid_moves) 2
 
 let test_rook_move _ =
   let board = initialize_board () in
@@ -103,6 +121,12 @@ let test_rook_move _ =
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
+
+let test_rook_num_moves _ =
+  let board = initialize_board () in
+  let board = make_move board ('a', 2) ('a', 4) White in
+  let valid_moves = rook_moves White ('a', 1) board in
+  assert_equal (List.length valid_moves) 2
 
 let test_bishop_move _ =
   let board = initialize_board () in
@@ -117,6 +141,17 @@ let test_bishop_move _ =
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
+
+let test_bishop_num_moves _ =
+  let board = initialize_board () in
+  let board = make_move board ('a', 2) ('a', 4) White in
+  let board = make_move board ('b', 7) ('b', 6) Black in
+  let board = make_move board ('b', 2) ('b', 4) White in
+  let board = make_move board ('c', 7) ('c', 6) Black in
+  let board = make_move board ('c', 2) ('c', 4) White in
+  let board = make_move board ('d', 7) ('d', 6) Black in
+  let valid_moves = bishop_moves White ('c', 1) board in
+  assert_equal (List.length valid_moves) 2
 
 let test_en_passant _ =
   let board = initialize_board () in
@@ -146,6 +181,12 @@ let test_board_to_string_after_moves _ =
      +    a b c d e f g h    +"
   in
   assert_equal expected_str board_str
+
+let test_board_num_after_moves _ =
+  let board = initialize_board () in
+  let board = make_move board ('e', 2) ('e', 4) White in
+  let board = make_move board ('e', 7) ('e', 5) Black in
+  assert_equal 32 (List.length board)
 
 let test_invalid_pawn_move _ =
   let board = initialize_board () in
@@ -270,6 +311,35 @@ let test_queen _ =
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
 
+let test_queen_num_moves _ =
+  let board = initialize_board () in
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 6) Black in
+  let board = make_move board ('d', 1) ('d', 3) White in
+  let board = make_move board ('d', 6) ('d', 5) Black in
+  let valid_moves = queen_moves White ('d', 3) board in
+  assert_equal (List.length valid_moves) 16
+
+let test_queen_board _ =
+  let board = initialize_board () in
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 6) Black in
+  let board = make_move board ('d', 1) ('d', 3) White in
+  let board = make_move board ('d', 6) ('d', 5) Black in
+  let str =
+    "+    a b c d e f g h    +\n\
+     8  | ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ |  8\n\
+     7  | ♟ ♟ ♟ ♟ . ♟ ♟ ♟ |  7\n\
+     6  | . . . . ♟ . . . |  6\n\
+     5  | . . . . . . . . |  5\n\
+     4  | . . . ♙ . . . . |  4\n\
+     3  | . . . ♕ . . . . |  3\n\
+     2  | ♙ ♙ ♙ . ♙ ♙ ♙ ♙ |  2\n\
+     1  | ♖ ♘ ♗ . ♔ ♗ ♘ ♖ |  1\n\
+     +    a b c d e f g h    +"
+  in
+  assert_equal str (board_to_string board)
+
 let switch_turnw _ = assert_equal (switch_turn White) Black
 let switch_turnb _ = assert_equal (switch_turn Black) White
 
@@ -298,10 +368,77 @@ let pro_pawn _ =
   in
   assert_equal str (board_to_string (promote_pawn board1 ('c', 8) White))
 
-let initial_moves _ =
+let pro_pawn_type _ =
+  let board = initialize_board () in
+  let board = make_move board ('b', 2) ('b', 4) White in
+  let board = make_move board ('c', 7) ('c', 5) Black in
+  let board = make_move board ('b', 4) ('c', 5) White in
+  let board = make_move board ('b', 7) ('b', 6) Black in
+  let board = make_move board ('c', 5) ('c', 6) White in
+  let board = make_move board ('c', 8) ('b', 7) Black in
+  let board = make_move board ('c', 6) ('c', 7) White in
+  let board = make_move board ('b', 6) ('b', 5) Black in
+  let board1 = make_move board ('c', 7) ('c', 8) White in
+  assert_equal
+    (Some (Queen, White))
+    (piece_at_position (promote_pawn board1 ('c', 8) White) ('c', 8))
+
+let initial_moves_white _ =
   let board = initialize_board () in
   let moves = all_possible_moves board White in
   assert_equal (List.length moves) 20
+
+let initial_moves_black _ =
+  let board = initialize_board () in
+  let moves = all_possible_moves board White in
+  assert_equal (List.length moves) 20
+
+let inital_moves_rook _ =
+  let board = initialize_board () in
+  let rook_move = valid_moves_for_piece board ('a', 1) in
+  assert_equal rook_move []
+
+let has_valid_moves _ =
+  let board = initialize_board () in
+  let rook_move = is_valid_move board ('a', 1) ('a', 2) White in
+  assert_equal rook_move false
+
+let initial_moves _ =
+  let board = initialize_board () in
+  let moves_white = all_possible_moves board White in
+  let moves_black = all_possible_moves board Black in
+  assert_equal (List.length moves_white) (List.length moves_black)
+
+let initial_see_moves _ =
+  let board = initialize_board () in
+  let valid_moves = all_possible_moves board White in
+  let expected_moves =
+    [
+      (('h', 2), ('h', 3));
+      (('h', 2), ('h', 4));
+      (('g', 2), ('g', 3));
+      (('g', 2), ('g', 4));
+      (('f', 2), ('f', 3));
+      (('f', 2), ('f', 4));
+      (('e', 2), ('e', 3));
+      (('e', 2), ('e', 4));
+      (('d', 2), ('d', 3));
+      (('d', 2), ('d', 4));
+      (('c', 2), ('c', 3));
+      (('c', 2), ('c', 4));
+      (('b', 2), ('b', 3));
+      (('b', 2), ('b', 4));
+      (('a', 2), ('a', 3));
+      (('a', 2), ('a', 4));
+      (('g', 1), ('h', 3));
+      (('g', 1), ('f', 3));
+      (('b', 1), ('c', 3));
+      (('b', 1), ('a', 3));
+    ]
+  in
+  assert_equal
+    (List.sort compare valid_moves)
+    (List.sort compare expected_moves)
 
 let check_checkmate_1 _ =
   let board = initialize_board () in
@@ -349,6 +486,12 @@ let take_pawn _ =
   let board = make_move board ('e', 7) ('e', 5) Black in
   let valid_moves = pawn_moves White ('d', 4) board in
   assert_equal (List.exists (fun (_, pos) -> pos = ('e', 5)) valid_moves) true
+
+let take_pawn_count _ =
+  let board = initialize_board () in
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 5) Black in
+  assert_equal (List.length board) 32
 
 let take_pawn_board _ =
   let board = initialize_board () in
@@ -488,7 +631,7 @@ let suite =
          "switch_turnb" >:: switch_turnb;
          "switch_turnw" >:: switch_turnw;
          "pro_pawn" >:: pro_pawn;
-         "initial_moves" >:: initial_moves;
+         "initial_moves_white" >:: initial_moves_white;
          "check_checkmate_1" >:: check_checkmate_1;
          "check_stalemate_1" >:: check_stalemate_1;
          "checkmate_2" >:: checkmate_2;
@@ -523,6 +666,21 @@ let suite =
          "test_valid_move_board" >:: test_valid_move_board;
          "test_board_list" >:: test_board_list;
          "test_valid_queen" >:: test_valid_queen;
+         "test_queen_board" >:: test_queen_board;
+         "initial_see_moves" >:: initial_see_moves;
+         "initial_moves_black" >:: initial_moves_black;
+         "initial_moves" >:: initial_moves;
+         "inital_moves_rook" >:: inital_moves_rook;
+         "has_valid_moves" >:: has_valid_moves;
+         "test_queen_num_moves" >:: test_queen_num_moves;
+         "test_pawn_num_moves" >:: test_pawn_num_moves;
+         "test_king_num_moves" >:: test_king_num_moves;
+         "test_knight_num_moves" >:: test_knight_num_moves;
+         "test_rook_num_moves" >:: test_rook_num_moves;
+         "test_bishop_num_moves" >:: test_bishop_num_moves;
+         "test_board_num_after_moves" >:: test_board_num_after_moves;
+         "pro_pawn_type" >:: pro_pawn_type;
+         "take_pawn_count" >:: take_pawn_count;
        ]
 
 let () = run_test_tt_main suite

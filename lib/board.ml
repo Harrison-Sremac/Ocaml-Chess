@@ -118,7 +118,8 @@ let is_valid_move board src dest curr_color =
       else false
   | None -> false
 
-let move_piece board src dest = make_move board src dest White
+let move_piece (board : board) (src : position) dest =
+  make_move board src dest White
 
 let promote_pawn board pos color =
   let piece_choice = "Queen" in

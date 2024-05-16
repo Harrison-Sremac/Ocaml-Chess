@@ -80,7 +80,7 @@ val is_stalemate : board -> color -> bool
 (** [is_stalemate board color] checks if the given [color] is in stalemate on
     the board. *)
 
-val move_piece : board -> position -> position -> (position * position) list
+val move_piece : board -> position -> position -> board
 (** [move_piece board src dest] returns a list of possible moves from [src] to
     [dest] on the board. *)
 
