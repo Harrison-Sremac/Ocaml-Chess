@@ -3,6 +3,24 @@ open Types
 type position = char * int
 type board = (position * (piece * color)) list
 
+let string_of_piece piece =
+  match piece with
+  | King -> "King"
+  | Queen -> "Queen"
+  | Rook -> "Rook"
+  | Bishop -> "Bishop"
+  | Knight -> "Knight"
+  | Pawn -> "Pawn"
+
+let string_of_color color =
+  match color with
+  | White -> "White"
+  | Black -> "Black"
+
+let string_of_position (file, rank) = Printf.sprintf "%c%d" file rank
+let piece_at_position board pos = List.assoc_opt pos board
+let board_as_list board = board
+
 let create_initial_castling_rights () =
   {
     white_kingside = true;
@@ -100,6 +118,8 @@ let is_valid_move board src dest curr_color =
       else false
   | None -> false
 
+let move_piece board src dest = make_move board src dest White
+
 let promote_pawn board pos color =
   let piece_choice = "Queen" in
   let piece =
@@ -147,32 +167,12 @@ let switch_turn color =
   | White -> Black
   | Black -> White
 
-let print_board board = (print_endline (board_to_string board) [@coverage off])
-
-let string_of_piece piece =
-  match piece with
-  | King -> "King"
-  | Queen -> "Queen"
-  | Rook -> "Rook"
-  | Bishop -> "Bishop"
-  | Knight -> "Knight"
-  | Pawn -> "Pawn"
-
-let string_of_color color =
-  match color with
-  | White -> "White"
-  | Black -> "Black"
-
-let string_of_position (file, rank) = Printf.sprintf "%c%d" file rank
-let piece_at_position board pos = List.assoc_opt pos board
-let is_checkmate board color = check_mate board color
-let is_stalemate board color = stale_mate board color
-
 let valid_moves_for_piece board pos =
   match List.assoc_opt pos board with
   | Some (piece, color) -> Pieces.possible_moves piece color pos board
   | None -> []
 
-let move_piece board src dest = make_move board src dest White
+let is_checkmate board color = check_mate board color
+let is_stalemate board color = stale_mate board color
 let initialize_castling_rights () = create_initial_castling_rights ()
-let board_as_list board = board
+let print_board board = (print_endline (board_to_string board) [@coverage off])

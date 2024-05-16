@@ -182,7 +182,6 @@ let test_invalid_knight_move _ =
 
 let test_invalid_queen_move _ =
   let board = initialize_board () in
-  (* Clear path for castling *)
   let board = make_move board ('d', 2) ('d', 4) White in
   let board = make_move board ('e', 7) ('e', 5) Black in
   let valid_moves = queen_moves White ('d', 1) board in
