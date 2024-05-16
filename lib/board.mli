@@ -22,4 +22,5 @@ val king_in_check : board -> color -> bool
 val valid_moves_for_piece : board -> position -> (position * position) list
 val is_checkmate : board -> color -> bool
 val is_stalemate : board -> color -> bool
+val move_piece : board -> position -> position -> (position * position) list
 val print_board : board -> unit

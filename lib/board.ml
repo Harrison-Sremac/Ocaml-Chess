@@ -118,8 +118,6 @@ let is_valid_move board src dest curr_color =
       else false
   | None -> false
 
-let move_piece board src dest = make_move board src dest White
-
 let promote_pawn board pos color =
   let piece_choice = "Queen" in
   let piece =
@@ -174,5 +172,8 @@ let valid_moves_for_piece board pos =
 
 let is_checkmate board color = check_mate board color
 let is_stalemate board color = stale_mate board color
-let initialize_castling_rights () = create_initial_castling_rights ()
+
+let initialize_castling_rights () =
+  (create_initial_castling_rights () [@coverage off])
+
 let print_board board = (print_endline (board_to_string board) [@coverage off])

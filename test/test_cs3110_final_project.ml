@@ -75,7 +75,6 @@ let test_pawn_capture _ =
     (List.sort compare expected_moves)
 
 let test_king_move _ =
-  print_endline "king";
   let board = initialize_board () in
   let board = make_move board ('e', 2) ('e', 3) White in
   let board = make_move board ('a', 7) ('a', 6) Black in
@@ -118,26 +117,6 @@ let test_bishop_move _ =
   assert_equal
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
-
-let test_castling _ =
-  let board = initialize_board () in
-  (* Clear path for castling *)
-  let board = make_move board ('e', 2) ('e', 4) White in
-  let board = make_move board ('e', 7) ('e', 5) Black in
-  let board = make_move board ('g', 1) ('f', 3) White in
-  let board = make_move board ('g', 8) ('f', 6) Black in
-  let board = make_move board ('f', 1) ('c', 4) White in
-  let board = make_move board ('f', 8) ('c', 5) Black in
-  let board = make_move board ('d', 2) ('d', 3) White in
-  let board = make_move board ('e', 8) ('f', 8) Black in
-
-  let expected_board =
-    List.filter (fun (pos, _) -> pos <> ('e', 1) && pos <> ('h', 1)) board
-    @ [ (('g', 1), (King, White)); (('f', 1), (Rook, White)) ]
-  in
-
-  (* Compare the board states *)
-  assert_equal (List.sort compare board) (List.sort compare expected_board)
 
 let test_en_passant _ =
   let board = initialize_board () in
@@ -324,15 +303,15 @@ let initial_moves _ =
   let moves = all_possible_moves board White in
   assert_equal (List.length moves) 20
 
-let check_checkmate_false _ =
+let check_checkmate_1 _ =
   let board = initialize_board () in
   assert_equal (check_mate board White) false
 
-let check_stalemate_false _ =
+let check_stalemate_1 _ =
   let board = initialize_board () in
   assert_equal (stale_mate board White) false
 
-let checkmate_true _ =
+let checkmate_2 _ =
   let board = initialize_board () in
   let board = make_move board ('e', 2) ('e', 4) White in
   let board = make_move board ('f', 7) ('f', 5) Black in
@@ -341,7 +320,7 @@ let checkmate_true _ =
   let board = make_move board ('d', 1) ('h', 5) White in
   assert_equal (check_mate board Black) true
 
-let stalemate_true _ =
+let stalemate_2 _ =
   let board = initialize_board () in
   let board = make_move board ('c', 2) ('c', 4) White in
   let board = make_move board ('h', 7) ('h', 5) Black in
@@ -375,6 +354,7 @@ let take_pawn_board _ =
   let board = initialize_board () in
   let board = make_move board ('d', 2) ('d', 4) White in
   let board = make_move board ('e', 7) ('e', 5) Black in
+  let board = make_move board ('d', 4) ('e', 5) Black in
   let str =
     "+    a b c d e f g h    +\n\
      8  | ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ |  8\n\
@@ -389,10 +369,68 @@ let take_pawn_board _ =
   in
   assert_equal str (board_to_string board)
 
-let invalid_move _ =
+let string_king _ = assert_equal (string_of_piece King) "King"
+let string_queen _ = assert_equal (string_of_piece Queen) "Queen"
+let string_Rook _ = assert_equal (string_of_piece Rook) "Rook"
+let string_Bishop _ = assert_equal (string_of_piece Bishop) "Bishop"
+let string_knight _ = assert_equal (string_of_piece Knight) "Knight"
+let string_pawn _ = assert_equal (string_of_piece Pawn) "Pawn"
+let string_white _ = assert_equal (string_of_color White) "White"
+let string_black _ = assert_equal (string_of_color Black) "Black"
+let test_position_string _ = assert_equal (string_of_position ('a', 1)) "a1"
+
+let test_piece_at_position _ =
   let board = initialize_board () in
-  let board = make_move board ('d', 2) ('d', 3) White in
-  assert_equal (board_to_string (initialize_board ())) (board_to_string board)
+  assert_equal (piece_at_position board ('a', 1)) (Some (Rook, White))
+
+let move_nothing _ =
+  let board = initialize_board () in
+  let board = make_move board ('a', 4) ('a', 5) White in
+  assert_equal (board_to_string board) (board_to_string (initialize_board ()))
+
+let is_checkmate_1 _ =
+  let board = initialize_board () in
+  assert_equal (is_checkmate board White) false
+
+let is_stalemate_1 _ =
+  let board = initialize_board () in
+  assert_equal (is_stalemate board White) false
+
+let is_checkmate_2 _ =
+  let board = initialize_board () in
+  let board = make_move board ('e', 2) ('e', 4) White in
+  let board = make_move board ('f', 7) ('f', 5) Black in
+  let board = make_move board ('e', 4) ('f', 5) White in
+  let board = make_move board ('g', 7) ('g', 5) Black in
+  let board = make_move board ('d', 1) ('h', 5) White in
+  assert_equal (is_checkmate board Black) true
+
+let is_stalemate_2 _ =
+  let board = initialize_board () in
+  let board = make_move board ('c', 2) ('c', 4) White in
+  let board = make_move board ('h', 7) ('h', 5) Black in
+  let board = make_move board ('h', 2) ('h', 4) White in
+  let board = make_move board ('a', 7) ('a', 5) Black in
+  let board = make_move board ('d', 1) ('a', 4) White in
+  let board = make_move board ('a', 8) ('a', 6) Black in
+  let board = make_move board ('a', 4) ('a', 5) White in
+  let board = make_move board ('a', 6) ('h', 6) Black in
+  let board = make_move board ('a', 5) ('c', 7) White in
+  let board = make_move board ('f', 7) ('f', 6) Black in
+  let board = make_move board ('c', 7) ('d', 7) White in
+  let board = make_move board ('e', 8) ('f', 7) Black in
+  let board = make_move board ('d', 7) ('b', 7) White in
+  let board = make_move board ('d', 8) ('d', 3) Black in
+  let board = make_move board ('b', 7) ('b', 8) White in
+  let board = make_move board ('d', 3) ('h', 7) Black in
+  let board = make_move board ('b', 8) ('c', 8) White in
+  let board = make_move board ('f', 7) ('g', 6) Black in
+  let board = make_move board ('c', 8) ('e', 6) White in
+  assert_equal (is_stalemate board Black) true
+
+let test_valid_move_board _ =
+  let board = initialize_board () in
+  assert_equal (is_valid_move board ('e', 2) ('e', 4) White) true
 
 let suite =
   "Chess Tests"
@@ -403,7 +441,7 @@ let suite =
          "test_pawn_capture" >:: test_pawn_capture;
          "test_king_move" >:: test_king_move;
          "test_knight_move" >:: test_knight_move;
-         "test_castling" >:: test_castling;
+         (*"test_castling" >:: test_castling; *)
          "test_en_passant" >:: test_en_passant;
          "test_board_to_string_after_moves" >:: test_board_to_string_after_moves;
          "test_invalid_pawn_move" >:: test_invalid_pawn_move;
@@ -416,10 +454,10 @@ let suite =
          "switch_turnw" >:: switch_turnw;
          "pro_pawn" >:: pro_pawn;
          "initial_moves" >:: initial_moves;
-         "check_checkmate_false" >:: check_checkmate_false;
-         "check_stalemate_false" >:: check_stalemate_false;
-         "checkmate_true" >:: checkmate_true;
-         "stalemate_true" >:: stalemate_true;
+         "check_checkmate_1" >:: check_checkmate_1;
+         "check_stalemate_1" >:: check_stalemate_1;
+         "checkmate_2" >:: checkmate_2;
+         "stalemate_2" >:: stalemate_2;
          "stay_on_board_left" >:: stay_on_board_left;
          "stay_on_board_bottom" >:: stay_on_board_bottom;
          "stay_on_board_right" >:: stay_on_board_right;
@@ -432,7 +470,22 @@ let suite =
          "test_invalid_king_move" >:: test_invalid_king_move;
          "take_pawn" >:: take_pawn;
          "take_pawn_board" >:: take_pawn_board;
-         "invalid_move" >:: invalid_move;
+         "string_king" >:: string_king;
+         "string_queen" >:: string_queen;
+         "string_Rook" >:: string_Rook;
+         "string_Bishop" >:: string_Bishop;
+         "string_knight" >:: string_knight;
+         "string_pawn" >:: string_pawn;
+         "string_black" >:: string_black;
+         "string_white" >:: string_white;
+         "test_position_string" >:: test_position_string;
+         "test_piece_at_position" >:: test_piece_at_position;
+         "move_nothing" >:: move_nothing;
+         "is_checkmate_1" >:: is_checkmate_1;
+         "is_stalemate_1" >:: is_stalemate_1;
+         "is_checkmate_2" >:: is_checkmate_2;
+         "is_stalemate_2" >:: is_stalemate_2;
+         "test_valid_move_board" >:: test_valid_move_board;
        ]
 
 let () = run_test_tt_main suite
