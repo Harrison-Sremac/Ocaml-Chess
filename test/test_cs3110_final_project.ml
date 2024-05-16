@@ -237,6 +237,47 @@ let test_queen _ =
     (List.sort compare valid_moves)
     (List.sort compare expected_moves)
 
+let switch_turnw _ = assert_equal (switch_turn White) Black
+let switch_turnb _ = assert_equal (switch_turn Black) White
+
+let pro_pawn _ =
+  let board = initialize_board () in
+  let board = make_move board ('b', 2) ('b', 4) White in
+  let board = make_move board ('c', 7) ('c', 5) Black in
+  let board = make_move board ('b', 4) ('c', 5) White in
+  let board = make_move board ('b', 7) ('b', 6) Black in
+  let board = make_move board ('c', 5) ('c', 6) White in
+  let board = make_move board ('c', 8) ('b', 7) Black in
+  let board = make_move board ('c', 6) ('c', 7) White in
+  let board = make_move board ('b', 6) ('b', 5) Black in
+  let board1 = make_move board ('c', 7) ('c', 8) White in
+  let str =
+    "+    a b c d e f g h    +\n\
+     8  | ♜ ♞ ♕ ♛ ♚ ♝ ♞ ♜ |  8\n\
+     7  | ♟ ♝ . ♟ ♟ ♟ ♟ ♟ |  7\n\
+     6  | . . . . . . . . |  6\n\
+     5  | . ♟ . . . . . . |  5\n\
+     4  | . . . . . . . . |  4\n\
+     3  | . . . . . . . . |  3\n\
+     2  | ♙ . ♙ ♙ ♙ ♙ ♙ ♙ |  2\n\
+     1  | ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ |  1\n\
+     +    a b c d e f g h    +"
+  in
+  assert_equal str (board_to_string (promote_pawn board1 ('c', 8) White))
+
+let initial_moves _ =
+  let board = initialize_board () in
+  let moves = all_possible_moves board White in
+  assert_equal (List.length moves) 20
+
+let check_checkmate_false _ =
+  let board = initialize_board () in
+  assert_equal (check_mate board White) false
+
+let check_stalemate_false _ =
+  let board = initialize_board () in
+  assert_equal (stale_mate board White) false
+
 let suite =
   "Chess Tests"
   >::: [
@@ -255,6 +296,12 @@ let suite =
          "test_rook_move" >:: test_rook_move;
          "test_bishop_move" >:: test_bishop_move;
          "test_queen" >:: test_queen;
+         "switch_turnb" >:: switch_turnb;
+         "switch_turnw" >:: switch_turnw;
+         "pro_pawn" >:: pro_pawn;
+         "initial_moves" >:: initial_moves;
+         "check_checkmate_false" >:: check_checkmate_false;
+         "check_stalemate_false" >:: check_stalemate_false;
        ]
 
 let () = run_test_tt_main suite
