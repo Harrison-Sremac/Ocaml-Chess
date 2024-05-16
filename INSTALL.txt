@@ -1,4 +1,15 @@
-After downloading cs3110_final_project.zip, double click the zipped file to access the cs3110_final_project folder. Launch the terminal on your computer and use cd commands to open the directory the cs3110_final_project folder is in. Then, assuming OCaml is set up on your computer according to the OP textbook, run [opam install lablgtk3] in your terminal. Once that is done, you can type dune exec [bin/main.exe]. The terminal will output a message saying "Welcome to OCaml Chess!" along with instructions on how to play the chess game through the terminal.
-If you would like, there is also the option to play in the GUI popup that will appear concurrently. Interface with the GUI by first clicking on the piece you would like to move, then the square you wish to move it to.
+After downloading cs3110_final_project.zip, double click the zipped file to 
+access the cs3110_final_project folder. Launch the terminal on your computer and 
+use cd commands to open the directory the cs3110_final_project folder is in. 
+Then, assuming OCaml is set up on your computer according to the OP textbook, 
+run [opam install lablgtk3] in your terminal. Once that is done, you can type 
+dune exec [bin/main.exe]. The terminal will output a message saying "Welcome to 
+OCaml Chess!" along with instructions on how to play the chess game through the 
+terminal.
 
-The object of the game is to play the game of chess, just as you normally would on a board. Have fun!
+If you would like, there is also the option to play in the GUI popup that will 
+appear concurrently. Interface with the GUI by first clicking on the piece you 
+would like to move, then the square you wish to move it to.
+
+The object of the game is to play the game of chess, just as you normally would 
+on a board. Have fun!
