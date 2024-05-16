@@ -1,3 +1,5 @@
+(* @author Ajay Tadinada (at663), Mericel Tao (mst223), Sanya Kohli (sk2682),
+   Harrison Sremac (hcs59) *)
 open Chess.Board
 open Chess.Types
 open Chess.Input
