@@ -80,6 +80,39 @@ let king_in_check board color =
            (Pieces.possible_moves piece c pos board))
     board
 
+let make_move board src dest curr_color =
+  match List.assoc_opt src board with
+  | Some piece ->
+      let board_without_src = List.filter (fun (pos, _) -> pos <> src) board in
+      let board_without_dest =
+        List.filter (fun (pos, _) -> pos <> dest) board_without_src
+      in
+      (dest, piece) :: board_without_dest
+  | None -> board
+
+let is_valid_move board src dest curr_color =
+  match List.assoc_opt src board with
+  | Some (piece, color) ->
+      if color = curr_color then
+        let possible_moves = Pieces.possible_moves piece color src board in
+        List.exists (fun (_, end_pos) -> end_pos = dest) possible_moves
+        && not (king_in_check (make_move board src dest curr_color) curr_color)
+      else false
+  | None -> false
+
+let promote_pawn board pos color =
+  let piece_choice = "Queen" in
+  let piece =
+    match piece_choice with
+    | "Queen" -> Queen
+    | "Rook" -> Rook
+    | "Bishop" -> Bishop
+    | "Knight" -> Knight
+    | _ -> Queen
+  in
+  let board_without_pawn = List.filter (fun (p, _) -> p <> pos) board in
+  (pos, (piece, color)) :: board_without_pawn
+
 let all_possible_moves board color =
   List.fold_left
     (fun acc (pos, (piece, piece_color)) ->
@@ -88,33 +121,6 @@ let all_possible_moves board color =
         List.append piece_moves acc
       else acc)
     [] board
-
-let is_valid_move_no_check board src dest curr_color =
-  match List.assoc_opt src board with
-  | Some (piece, color) ->
-      if color = curr_color then
-        let moves = Pieces.possible_moves piece color src board in
-        List.exists (fun (_, end_pos) -> end_pos = dest) moves
-      else false
-  | None -> false
-
-let make_move board src dest curr_color =
-  if is_valid_move_no_check board src dest curr_color then
-    match List.assoc_opt src board with
-    | Some piece ->
-        let board_without_src =
-          List.filter (fun (pos, _) -> pos <> src) board
-        in
-        let board_without_dest =
-          List.filter (fun (pos, _) -> pos <> dest) board_without_src
-        in
-        (dest, piece) :: board_without_dest
-    | None -> board
-  else board
-
-let is_valid_move board src dest curr_color =
-  let temp_board = make_move board src dest curr_color in
-  not (king_in_check temp_board curr_color)
 
 let check_mate board color =
   if king_in_check board color then
@@ -136,25 +142,12 @@ let stale_mate board color =
       king_in_check new_board color)
     moves
 
-let promote_pawn board pos color =
-  let piece_choice = "Queen" in
-  let piece =
-    match piece_choice with
-    | "Queen" -> Queen
-    | "Rook" -> Rook
-    | "Bishop" -> Bishop
-    | "Knight" -> Knight
-    | _ -> Queen
-  in
-  let board_without_pawn = List.filter (fun (p, _) -> p <> pos) board in
-  (pos, (piece, color)) :: board_without_pawn
-
 let switch_turn color =
   match color with
   | White -> Black
   | Black -> White
 
-let print_board board = print_endline (board_to_string board)
+let print_board board = (print_endline (board_to_string board) [@coverage off])
 
 let string_of_piece piece =
   match piece with

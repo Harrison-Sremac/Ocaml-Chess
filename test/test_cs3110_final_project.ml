@@ -131,9 +131,6 @@ let test_castling _ =
   let board = make_move board ('d', 2) ('d', 3) White in
   let board = make_move board ('e', 8) ('f', 8) Black in
 
-  (* Perform castling move *)
-
-  (* Check if the board state is correct after castling *)
   let expected_board =
     List.filter (fun (pos, _) -> pos <> ('e', 1) && pos <> ('h', 1)) board
     @ [ (('g', 1), (King, White)); (('f', 1), (Rook, White)) ]
@@ -182,6 +179,36 @@ let test_invalid_knight_move _ =
   let valid_moves = knight_moves White ('b', 1) board in
   assert_bool "Knight should not move to a2"
     (not (List.exists (fun (_, pos) -> pos = ('a', 2)) valid_moves))
+
+let test_invalid_queen_move _ =
+  let board = initialize_board () in
+  (* Clear path for castling *)
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 5) Black in
+  let valid_moves = queen_moves White ('d', 1) board in
+  assert_bool "Queen should not move in an L"
+    (not (List.exists (fun (_, pos) -> pos = ('f', 3)) valid_moves))
+
+let test_invalid_rook_move _ =
+  let board = initialize_board () in
+  let board = make_move board ('b', 2) ('b', 4) White in
+  let valid_moves = rook_moves White ('a', 1) board in
+  assert_bool "Rook should not move diagonally"
+    (not (List.exists (fun (_, pos) -> pos = ('b', 2)) valid_moves))
+
+let test_invalid_bishop_move _ =
+  let board = initialize_board () in
+  let board = make_move board ('f', 2) ('f', 4) White in
+  let valid_moves = bishop_moves White ('f', 1) board in
+  assert_bool "Bishio should not move forward"
+    (not (List.exists (fun (_, pos) -> pos = ('f', 2)) valid_moves))
+
+let test_invalid_king_move _ =
+  let board = initialize_board () in
+  let board = make_move board ('e', 2) ('e', 4) White in
+  let valid_moves = king_moves White ('e', 1) board in
+  assert_bool "King can't move two places"
+    (not (List.exists (fun (_, pos) -> pos = ('e', 3)) valid_moves))
 
 let stay_on_board_left _ =
   let board = initialize_board () in
@@ -338,6 +365,36 @@ let stalemate_true _ =
   let board = make_move board ('c', 8) ('e', 6) White in
   assert_equal (stale_mate board Black) true
 
+let take_pawn _ =
+  let board = initialize_board () in
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 5) Black in
+  let valid_moves = pawn_moves White ('d', 4) board in
+  assert_equal (List.exists (fun (_, pos) -> pos = ('e', 5)) valid_moves) true
+
+let take_pawn_board _ =
+  let board = initialize_board () in
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 5) Black in
+  let str =
+    "+    a b c d e f g h    +\n\
+     8  | ♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜ |  8\n\
+     7  | ♟ ♟ ♟ ♟ . ♟ ♟ ♟ |  7\n\
+     6  | . . . . . . . . |  6\n\
+     5  | . . . . ♙ . . . |  5\n\
+     4  | . . . . . . . . |  4\n\
+     3  | . . . . . . . . |  3\n\
+     2  | ♙ ♙ ♙ . ♙ ♙ ♙ ♙ |  2\n\
+     1  | ♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖ |  1\n\
+     +    a b c d e f g h    +"
+  in
+  assert_equal str (board_to_string board)
+
+let invalid_move _ =
+  let board = initialize_board () in
+  let board = make_move board ('d', 2) ('d', 3) White in
+  assert_equal (board_to_string (initialize_board ())) (board_to_string board)
+
 let suite =
   "Chess Tests"
   >::: [
@@ -369,6 +426,14 @@ let suite =
          "stay_on_board_right" >:: stay_on_board_right;
          "stay_on_board_top" >:: stay_on_board_top;
          "spots_with_same_color" >:: spots_with_same_color;
+         "test_invalid_rook_move" >:: test_invalid_rook_move;
+         "test_invalid_queen_move" >:: test_invalid_queen_move;
+         "test_invalid_rook_move" >:: test_invalid_rook_move;
+         "test_invalid_bishop_move" >:: test_invalid_bishop_move;
+         "test_invalid_king_move" >:: test_invalid_king_move;
+         "take_pawn" >:: take_pawn;
+         "take_pawn_board" >:: take_pawn_board;
+         "invalid_move" >:: invalid_move;
        ]
 
 let () = run_test_tt_main suite

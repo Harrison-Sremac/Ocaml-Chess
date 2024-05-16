@@ -2,22 +2,6 @@ open Types
 open Board
 open Input
 
-let string_of_piece piece =
-  match piece with
-  | King -> "King"
-  | Queen -> "Queen"
-  | Rook -> "Rook"
-  | Bishop -> "Bishop"
-  | Knight -> "Knight"
-  | Pawn -> "Pawn"
-
-let string_of_color color =
-  match color with
-  | White -> "White"
-  | Black -> "Black"
-
-let string_of_position (file, rank) = Printf.sprintf "%c%d" file rank
-
 let is_castling_move src dest piece =
   match piece with
   | King ->
@@ -31,8 +15,14 @@ let is_castling_move src dest piece =
 let perform_castling board src dest color =
   let king_file, rank = src in
   let new_king_pos, old_rook_pos, new_rook_pos =
-    if dest = ('g', rank) then (('g', rank), ('h', rank), ('f', rank))
-    else if dest = ('c', rank) then (('c', rank), ('a', rank), ('d', rank))
+    if dest = ('g', rank) then
+      ( (char_of_int (Char.code king_file + 2), rank),
+        ('h', rank),
+        (char_of_int (Char.code king_file + 1), rank) )
+    else if dest = ('c', rank) then
+      ( (char_of_int (Char.code king_file - 2), rank),
+        ('a', rank),
+        (char_of_int (Char.code king_file - 1), rank) )
     else failwith "Invalid castling move"
   in
   let board_without_pieces =
@@ -138,6 +128,22 @@ let can_castle state src dest =
   in
   is_path_clear && is_king_safe && king_has_not_moved && rook_has_not_moved
 
+let move_gets_king_out_of_check board src dest curr_color =
+  not (king_in_check (make_move board src dest curr_color) curr_color)
+
+let perform_regular_move state src dest curr_color =
+  let new_board = Board.make_move state.board src dest curr_color in
+  let game_over, status = check_game_status { state with board = new_board } in
+  print_endline "Regular move performed.";
+  ( {
+      board = new_board;
+      turn = switch_turn curr_color;
+      game_over;
+      castling = state.castling;
+      last_move = Some (src, dest);
+    },
+    status )
+
 let make_move state src dest curr_color =
   let piece_opt = List.assoc_opt src state.board in
   match piece_opt with
@@ -165,10 +171,7 @@ let make_move state src dest curr_color =
       print_endline "Castling move performed.";
       ( {
           board = new_board;
-          turn =
-            (match curr_color with
-            | White -> Black
-            | Black -> White);
+          turn = switch_turn curr_color;
           game_over;
           castling = new_castling_rights;
           last_move = Some (src, dest);
@@ -184,10 +187,7 @@ let make_move state src dest curr_color =
       print_endline "En Passant move performed.";
       ( {
           board = new_board;
-          turn =
-            (match curr_color with
-            | White -> Black
-            | Black -> White);
+          turn = switch_turn curr_color;
           game_over;
           castling = state.castling;
           last_move = Some (src, dest);
@@ -201,32 +201,14 @@ let make_move state src dest curr_color =
       print_endline "Pawn promoted.";
       ( {
           board = new_board;
-          turn =
-            (match curr_color with
-            | White -> Black
-            | Black -> White);
+          turn = switch_turn curr_color;
           game_over;
           castling = state.castling;
           last_move = Some (src, dest);
         },
         status )
   | Some (piece, _) when is_valid_move state.board src dest curr_color ->
-      let new_board = Board.make_move state.board src dest curr_color in
-      let game_over, status =
-        check_game_status { state with board = new_board }
-      in
-      print_endline "Regular move performed.";
-      ( {
-          board = new_board;
-          turn =
-            (match curr_color with
-            | White -> Black
-            | Black -> White);
-          game_over;
-          castling = state.castling;
-          last_move = Some (src, dest);
-        },
-        status )
+      perform_regular_move state src dest curr_color
   | _ ->
       print_endline "Invalid move. Please try again.";
       (state, "Invalid move")
@@ -465,54 +447,6 @@ let main () =
        (fun () -> game_loop initial_state board_ref move_queue grid)
        ());
 
-  (* Run the GTK main loop in the main thread *)
   GMain.Main.main ()
 
 let () = main ()
-
-let rec print_moves moves =
-  match moves with
-  | [] -> ()
-  | (src, dest) :: rest ->
-      Printf.printf "Move from %s to %s\n" (string_of_position src)
-        (string_of_position dest);
-      print_moves rest
-
-let print_all_possible_moves board color =
-  let moves = all_possible_moves board color in
-  print_moves moves
-
-let rec print_board_positions board =
-  match board with
-  | [] -> ()
-  | (pos, (piece, color)) :: rest ->
-      Printf.printf "Piece: %s, Color: %s, Position: %s\n"
-        (string_of_piece piece) (string_of_color color) (string_of_position pos);
-      print_board_positions rest
-
-let display_check_status board color =
-  if king_in_check board color then
-    Printf.printf "%s King is in check\n" (string_of_color color)
-  else Printf.printf "%s King is not in check\n" (string_of_color color)
-
-let count_pieces board = List.length board
-
-let count_pieces_of_color board color =
-  List.fold_left
-    (fun acc (_, (_, c)) -> if c = color then acc + 1 else acc)
-    0 board
-
-let rec list_pieces board =
-  match board with
-  | [] -> []
-  | (pos, (piece, color)) :: rest -> (piece, color, pos) :: list_pieces rest
-
-let get_all_piece_positions board = List.map fst board
-
-let rec print_piece_list pieces =
-  match pieces with
-  | [] -> ()
-  | (piece, color, pos) :: rest ->
-      Printf.printf "Piece: %s, Color: %s, Position: %s\n"
-        (string_of_piece piece) (string_of_color color) (string_of_position pos);
-      print_piece_list rest
