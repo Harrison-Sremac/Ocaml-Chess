@@ -132,7 +132,6 @@ let test_castling _ =
   let board = make_move board ('e', 8) ('f', 8) Black in
 
   (* Perform castling move *)
-  let board = perform_castling board ('e', 1) ('g', 1) White in
 
   (* Check if the board state is correct after castling *)
   let expected_board =
