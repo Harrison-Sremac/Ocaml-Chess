@@ -120,9 +120,8 @@ let test_bishop_move _ =
     (List.sort compare expected_moves)
 
 let test_castling _ =
-  print_endline "castle";
   let board = initialize_board () in
-  (* Clear path and move king and rook *)
+  (* Clear path for castling *)
   let board = make_move board ('e', 2) ('e', 4) White in
   let board = make_move board ('e', 7) ('e', 5) Black in
   let board = make_move board ('g', 1) ('f', 3) White in
@@ -131,23 +130,18 @@ let test_castling _ =
   let board = make_move board ('f', 8) ('c', 5) Black in
   let board = make_move board ('d', 2) ('d', 3) White in
   let board = make_move board ('e', 8) ('f', 8) Black in
-  let valid_moves = king_moves White ('e', 1) board in
-  let expected_moves =
-    [
-      (('e', 1), ('e', 2));
-      (('e', 1), ('d', 2));
-      (('e', 1), ('f', 1));
-      (('e', 1), ('g', 1));
-    ]
+
+  (* Perform castling move *)
+  let board = perform_castling board ('e', 1) ('g', 1) White in
+
+  (* Check if the board state is correct after castling *)
+  let expected_board =
+    List.filter (fun (pos, _) -> pos <> ('e', 1) && pos <> ('h', 1)) board
+    @ [ (('g', 1), (King, White)); (('f', 1), (Rook, White)) ]
   in
-  List.iter
-    (fun (src, dest) ->
-      Printf.printf "Valid move: %c%d to %c%d\n" (fst src) (snd src) (fst dest)
-        (snd dest))
-    valid_moves;
-  assert_equal
-    (List.sort compare valid_moves)
-    (List.sort compare expected_moves)
+
+  (* Compare the board states *)
+  assert_equal (List.sort compare board) (List.sort compare expected_board)
 
 let test_en_passant _ =
   let board = initialize_board () in
