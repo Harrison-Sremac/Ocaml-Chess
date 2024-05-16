@@ -432,6 +432,41 @@ let test_valid_move_board _ =
   let board = initialize_board () in
   assert_equal (is_valid_move board ('e', 2) ('e', 4) White) true
 
+let test_board_list _ =
+  let board = initialize_board () in
+  assert_equal board (board_as_list board)
+
+let test_valid_queen _ =
+  let board = initialize_board () in
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 6) Black in
+  let board = make_move board ('d', 1) ('d', 3) White in
+  let board = make_move board ('d', 6) ('d', 5) Black in
+  let valid_moves = valid_moves_for_piece board ('d', 3) in
+  let expected_moves =
+    [
+      (('d', 3), ('a', 3));
+      (('d', 3), ('b', 3));
+      (('d', 3), ('c', 3));
+      (('d', 3), ('e', 3));
+      (('d', 3), ('f', 3));
+      (('d', 3), ('g', 3));
+      (('d', 3), ('h', 3));
+      (('d', 3), ('c', 4));
+      (('d', 3), ('b', 5));
+      (('d', 3), ('a', 6));
+      (('d', 3), ('e', 4));
+      (('d', 3), ('f', 5));
+      (('d', 3), ('g', 6));
+      (('d', 3), ('h', 7));
+      (('d', 3), ('d', 2));
+      (('d', 3), ('d', 1));
+    ]
+  in
+  assert_equal
+    (List.sort compare valid_moves)
+    (List.sort compare expected_moves)
+
 let suite =
   "Chess Tests"
   >::: [
@@ -486,6 +521,8 @@ let suite =
          "is_checkmate_2" >:: is_checkmate_2;
          "is_stalemate_2" >:: is_stalemate_2;
          "test_valid_move_board" >:: test_valid_move_board;
+         "test_board_list" >:: test_board_list;
+         "test_valid_queen" >:: test_valid_queen;
        ]
 
 let () = run_test_tt_main suite
