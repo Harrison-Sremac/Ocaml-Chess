@@ -278,6 +278,15 @@ let check_stalemate_false _ =
   let board = initialize_board () in
   assert_equal (stale_mate board White) false
 
+let checkmate_true _ =
+  let board = initialize_board () in
+  let board = make_move board ('e', 2) ('e', 4) White in
+  let board = make_move board ('f', 7) ('f', 5) Black in
+  let board = make_move board ('e', 4) ('f', 5) White in
+  let board = make_move board ('g', 7) ('g', 5) Black in
+  let board = make_move board ('d', 1) ('h', 5) White in
+  assert_equal (check_mate board Black) true
+
 let suite =
   "Chess Tests"
   >::: [
@@ -302,6 +311,7 @@ let suite =
          "initial_moves" >:: initial_moves;
          "check_checkmate_false" >:: check_checkmate_false;
          "check_stalemate_false" >:: check_stalemate_false;
+         "checkmate_true" >:: checkmate_true;
        ]
 
 let () = run_test_tt_main suite
