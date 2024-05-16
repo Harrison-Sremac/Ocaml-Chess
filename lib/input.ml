@@ -2,7 +2,6 @@ type user_command =
   | Move of (char * int) * (char * int)
   | Quit
 
-(* Helper function to parse a single chess position from a string like "e2" *)
 let parse_position input =
   if String.length input = 2 then
     let file = input.[0] in
@@ -12,7 +11,6 @@ let parse_position input =
     else None
   else None
 
-(* Reads a move or a quit command from standard input *)
 let read_move () =
   print_endline "Enter your move (e.g., e2 e4) or type 'quit' to end the game:";
   try
