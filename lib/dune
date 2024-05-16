@@ -1,4 +1,6 @@
 (library
  (name chess)
  (libraries batteries ANSITerminal lablgtk3)
- (flags :standard -w -37-34-32-27))
+ (flags :standard -w -37-34-32-27)
+ (instrumentation
+  (backend bisect_ppx)))

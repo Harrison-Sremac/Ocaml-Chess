@@ -206,6 +206,37 @@ let chess_output _ =
   let board_str = board_to_string (initialize_board ()) in
   assert_equal real_str board_str
 
+let test_queen _ =
+  let board = initialize_board () in
+  let board = make_move board ('d', 2) ('d', 4) White in
+  let board = make_move board ('e', 7) ('e', 6) Black in
+  let board = make_move board ('d', 1) ('d', 3) White in
+  let board = make_move board ('d', 6) ('d', 5) Black in
+  let valid_moves = queen_moves White ('d', 3) board in
+  let expected_moves =
+    [
+      (('d', 3), ('a', 3));
+      (('d', 3), ('b', 3));
+      (('d', 3), ('c', 3));
+      (('d', 3), ('e', 3));
+      (('d', 3), ('f', 3));
+      (('d', 3), ('g', 3));
+      (('d', 3), ('h', 3));
+      (('d', 3), ('c', 4));
+      (('d', 3), ('b', 5));
+      (('d', 3), ('a', 6));
+      (('d', 3), ('e', 4));
+      (('d', 3), ('f', 5));
+      (('d', 3), ('g', 6));
+      (('d', 3), ('h', 7));
+      (('d', 3), ('d', 2));
+      (('d', 3), ('d', 1));
+    ]
+  in
+  assert_equal
+    (List.sort compare valid_moves)
+    (List.sort compare expected_moves)
+
 let suite =
   "Chess Tests"
   >::: [
@@ -223,6 +254,7 @@ let suite =
          "chess_output" >:: chess_output;
          "test_rook_move" >:: test_rook_move;
          "test_bishop_move" >:: test_bishop_move;
+         "test_queen" >:: test_queen;
        ]
 
 let () = run_test_tt_main suite

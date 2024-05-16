@@ -10,6 +10,7 @@ let create_initial_castling_rights () =
     black_kingside = true;
     black_queenside = true;
   }
+  [@coverage off]
 
 let create_pawn_row color rank =
   List.map
@@ -149,4 +150,4 @@ let switch_turn color =
   | White -> Black
   | Black -> White
 
-let print_board board = print_endline (board_to_string board)
+let print_board board = (print_endline (board_to_string board) [@coverage off])
