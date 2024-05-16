@@ -1,0 +1,615 @@
+commit 12ca74dedf241b77fe1d068ca42e56aebb66dfaa
+Author: mericeltao <mst223@cornell.edu>
+Date:   Thu May 16 01:31:09 2024 -0700
+
+    Added documentation
+
+commit f9f1d80dafe2997a95c443c96d4b9b996490ee45
+Author: mericeltao <mst223@cornell.edu>
+Date:   Thu May 16 00:46:00 2024 -0700
+
+    Finished test cases
+
+commit 0eba43f520e98fe261723deb2dd2c53652de00b9
+Author: mericeltao <mst223@cornell.edu>
+Date:   Thu May 16 00:06:24 2024 -0700
+
+    More edits to the test
+
+commit 0f12ad57e3fcecd38dbd4aee5ffa5a3ec1467c43
+Author: Sanya Kohli <sk2682@cornell.edu>
+Date:   Thu May 16 03:05:40 2024 -0400
+
+    Editing specifications
+
+commit afe60d1de8a46fbd0ab61bad15eb05abe0f26d43
+Author: mericeltao <mst223@cornell.edu>
+Date:   Thu May 16 00:00:29 2024 -0700
+
+    Cleaning test cases
+
+commit 0791a24e2917ce656a6e8876528740719aef083d
+Author: Sanya Kohli <sk2682@cornell.edu>
+Date:   Thu May 16 02:58:38 2024 -0400
+
+    Added specifications to mli files
+
+commit 0fb9bd46c781395056c59e395d693da86f61a7cd
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 23:15:22 2024 -0700
+
+    Edited board files
+
+commit 5451782ded3f69536e0dac22265b0bac466b193c
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 22:56:40 2024 -0700
+
+    Deleted unneccessary files
+
+commit c309f70d3b3191d1db94154cc856341830958ceb
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 22:50:10 2024 -0700
+
+    Fixed gui, restricts piece movement better
+
+commit 8701c8bdb7b67a5a2bdf09760f2d83f438c0c173
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 21:48:00 2024 -0700
+
+    minor changes to help with testing
+
+commit 19d33e810f76e42afcf175c8cfe4d056e11c5e6a
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 19:03:12 2024 -0700
+
+    v
+
+commit e80339aaff81b8b03fae1724aa400884001e3701
+Merge: 92ef9d8 dc8e950
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 18:57:28 2024 -0700
+
+    merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit 92ef9d8c3eb30f95381d63b96fffbc9e5b65b730
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 18:57:14 2024 -0700
+
+    added handling for when king is under check
+
+commit dc8e95091ba2451ee91981d32105df5abb77c40a
+Merge: 252e34f 4d916de
+Author: Harrison Sremac <hcs59@cornell.edu>
+Date:   Wed May 15 21:56:16 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit 252e34fb444561b4da21036b37876c676c859e17
+Author: Harrison Sremac <hcs59@cornell.edu>
+Date:   Wed May 15 21:53:43 2024 -0400
+
+    more testing for castling
+
+commit 4d916de5cba27f4fe9f8951ee4ec4b8fc786365a
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 18:50:54 2024 -0700
+
+    Added stalemate test
+
+commit 03470cb145523cb477b4babea546cd907c6779bc
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 18:33:18 2024 -0700
+
+    93% for board coverage
+
+commit 246863a49fa1302986cbea353dbbf23f8546f5bf
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 17:49:24 2024 -0700
+
+    board.ml to 89% coverage
+
+commit 400608c448059478ca0e0d260a95119b787fa9bc
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 17:26:43 2024 -0700
+
+    Added black box testing
+
+commit ed2aa4a74132dd3f7f2b475e6da76261033a5ff5
+Merge: 11ef9a1 da048c8
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 16:59:01 2024 -0700
+
+    Merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit 11ef9a1e6951227697f27446d4ba54da1498a4e2
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 16:57:19 2024 -0700
+
+    game ends when checkmate
+
+commit da048c827aa5407c23a26bf045a054d1deba72bf
+Author: Harrison Sremac <hcs59@cornell.edu>
+Date:   Wed May 15 19:09:18 2024 -0400
+
+    reverted to the old files
+
+commit cd4a1cf6d66292ac958fc9f0f15b21ea570ff397
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 14:38:31 2024 -0700
+
+    Added rook and bishop tests
+
+commit 52a3471c1d00d2d587282f8081e26114d2970a14
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 14:03:52 2024 -0700
+
+    Improved castling
+
+commit cb977194dd80cd46c7d6fc7ee00aca68e69c4255
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 13:56:02 2024 -0700
+
+    Improved castling implementation
+
+commit d8e4c870a9ed0f2d94a0a62fc4babafc3a7f80f7
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 11:49:20 2024 -0700
+
+    Debugged some test cases
+
+commit a09dc4dc044bca354d68c3bf472165592f3476d7
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 11:13:58 2024 -0700
+
+    working basic implementaiton of chess in gui
+
+commit 49585f3c2612fe016413e37501b28fa65945bbe7
+Author: Harrison Sremac <hcs59@cornell.edu>
+Date:   Wed May 15 13:58:50 2024 -0400
+
+    trying to get tests to pass
+
+commit 7a019c29d2b609777c28856dd6972f33a7a60186
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 10:48:29 2024 -0700
+
+    made board better
+
+commit d97b5a1b89a88be07c4c9930d6fa0083e0bd533c
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 10:41:32 2024 -0700
+
+    no more flickering
+
+commit c2b300baddc93c9a763513766a87a658a39bfd1a
+Merge: 793c9a2 db9b11d
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 10:20:54 2024 -0700
+
+    hMerge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit 793c9a2e412a170beb72d314668080d7036573eb
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed May 15 10:20:20 2024 -0700
+
+    semi workign gui
+
+commit db9b11d7e9669b7da7c79158c508d03d71550f4b
+Author: Harrison Sremac <hcs59@cornell.edu>
+Date:   Wed May 15 12:58:56 2024 -0400
+
+    cool i made it so black is at the bottom white is at the top
+
+commit 58ac86bcdae5c81ec4d0b9065e4d712df9bde4b3
+Author: Harrison Sremac <hcs59@cornell.edu>
+Date:   Wed May 15 12:49:05 2024 -0400
+
+    cant get the tests to pass
+
+commit 8e9a74eb97f5086edd3096165986cd5e8de9baa3
+Author: Harrison Sremac <hcs59@cornell.edu>
+Date:   Wed May 15 12:36:27 2024 -0400
+
+    Ok so the tests are not all passing but they are all builidng
+
+commit 87df34e0c373c628ca2a9a8582db2dd96d9439bd
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 09:10:43 2024 -0700
+
+    Made it so both sides can move
+
+commit 2b34d016014a750ac211a6d8905acd67993111b4
+Author: mericeltao <mst223@cornell.edu>
+Date:   Wed May 15 08:36:01 2024 -0700
+
+    Added a test case
+
+commit 1e2481a90018455a2a62caa5cba32a5d78a2a763
+Author: Sanya Kohli <sk2682@cornell.edu>
+Date:   Mon May 13 19:12:12 2024 -0400
+
+    Fixed gui for mac
+
+commit a24e478460088041bfafd0dc5bb15d5e48010573
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Mon May 13 19:03:59 2024 -0400
+
+    the movement kinda works
+
+commit b89f3b216df3c70e32192f9dc93bc3fc64965c43
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Mon May 13 18:41:31 2024 -0400
+
+    does this version work
+
+commit 925573eb7666abb7383e8210009babf335abaf67
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Mon May 13 18:05:19 2024 -0400
+
+    now when you click on a tile it prints in the terminal what tile you hit
+
+commit a768b4871e5ee93e7cc967e90b698af182fa49dc
+Merge: a7c7039 233423e
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Mon May 13 17:56:01 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+    iwq
+    :wq
+
+commit a7c70391e90c10153467a08d041bb9eaa4afbe2b
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Mon May 13 17:55:38 2024 -0400
+
+    now when you make a cahge in the terminal it does in the gui
+
+commit 233423e8acad2dec5b11fbb29d33dc467e0ab735
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Mon May 13 17:52:09 2024 -0400
+
+    fully working chess logic
+    
+    n
+    d
+
+commit 09eabe6d49fb80c402b3109b8d1111e34bf5f318
+Merge: fd0a21c a59863c
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Mon May 13 17:32:57 2024 -0400
+
+    merge
+    Merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit a59863cc2fd8464c1d05db4ba3eb619767c93c13
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Mon May 13 17:31:48 2024 -0400
+
+    now you can see the pieces
+
+commit fd0a21cf9d024cb032af2532c26459038a6e4866
+Merge: cc2e37a d68c48a
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Mon May 13 17:25:15 2024 -0400
+
+    merge
+    Merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit cc2e37aa4ab4ca46bfec9e1f8c7c2e6c089a293b
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Mon May 13 17:24:20 2024 -0400
+
+    added en passant and pawn promotion rules
+
+commit d68c48a2a7b38e3878e48b3e8186fcdb95c9741c
+Author: mericeltao <mst223@cornell.edu>
+Date:   Mon May 13 17:14:14 2024 -0400
+
+    Stated creating GUI, only squares right now
+
+commit 5b07f45c10578260ec2ff92cab129623a1c13579
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Mon May 13 16:59:17 2024 -0400
+
+    added castling logic
+
+commit 8edc64b3937c1e5b640f104182f6ee5f1278ee3d
+Author: Sanya Kohli <sk2682@cornell.edu>
+Date:   Mon May 13 16:05:07 2024 -0400
+
+    Started test cases
+
+commit 0a3c3725e6b0ba78dfd905a798f7eb89bdef67a7
+Author: mericeltao <mst223@cornell.edu>
+Date:   Sun May 12 23:18:48 2024 -0400
+
+    Restricts wrong color from moving
+
+commit 6330d3d45aab4d387afb3a10231191db9bd9028d
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Sun May 12 18:02:20 2024 -0400
+
+    fixed the centering
+
+commit ffab7e4fc61556510108e70b21e7ef543751f45e
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Sun May 12 17:58:56 2024 -0400
+
+    remoed the plus from the edges
+
+commit 662a5518bd79c44bd640a177cb8768a434ac313a
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Sun May 12 17:56:51 2024 -0400
+
+    added  ned charchaters
+    Co-authored-by: Ajay Tadinada <at663@cornell.edu>
+    Co-authored-by: mericeltao <mericeltao@users.noreply.github.com>
+
+commit 89ec5d2038b7a5dbb58cd69119f77124f39bdd04
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Sun May 12 17:24:27 2024 -0400
+
+    Debug
+    
+    Co-authored-by: mericeltao <mericeltao@users.noreply.github.com>
+    Co-authored-by: Ajay Tadinada <at663@cornell.edu>
+
+commit ed3cb4e6656662b973878198b022787f6a67d48d
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Sun May 12 16:50:52 2024 -0400
+
+    som new stuff
+
+commit bc68deedd369ab950e06655fea0df3d56270b0a7
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Sun May 12 16:40:18 2024 -0400
+
+    idk
+
+commit 20110936b56351242085adff5f7abefbb7320d8d
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Sun May 12 15:06:50 2024 -0400
+
+    updated board with letter and number coordinates along the edges
+
+commit 3077d2a4d87aa77c1667bff544a650d8f237f5d4
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Sun May 12 14:57:08 2024 -0400
+
+    working basic implementiaon. pieces move and ivalid moves dont work and you get a warning
+
+commit be64f786ddc22d50a0aee4b9b1afc9718476d39c
+Author: mericeltao <mst223@cornell.edu>
+Date:   Sat May 11 23:19:58 2024 -0400
+
+    added types interface
+
+commit 0f2ca55143c45f84fdfe00334005e4857ca4debc
+Author: Mericel <mst223@cornell.edu>
+Date:   Sat May 4 17:04:44 2024 -0400
+
+    Debugged imports
+
+commit fe58ff37010efeeb7c1ae872c22f5ee50c196d29
+Author: Mericel <mst223@cornell.edu>
+Date:   Sat May 4 16:52:12 2024 -0400
+
+    Debugged some imports
+
+commit ef8efc3cc0da4e09e5c56ece4cf02964bb9de9c1
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Sat May 4 16:47:31 2024 -0400
+
+    semiworking implementation
+
+commit c8a3ab038829e6220e684010383ec2b411a1f96e
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Thu May 2 22:10:53 2024 -0400
+
+    implemented piece logic attempeted moving logic
+
+commit b62ece708f44f1c1a8c32874c24acf6a4029eccd
+Merge: bff417f 7923184
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Thu May 2 21:05:16 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit bff417faf2086a94e3da84bd7d755bf04f946683
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Thu May 2 21:04:53 2024 -0400
+
+    works now
+
+commit 26e429935029e5da0f0e42f4f2b03e9d882b6685
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Thu May 2 21:03:57 2024 -0400
+
+    Project set up runs an ddune builds
+    
+    Co-authored-by: mericeltao <mericeltao@users.noreply.github.com>
+    Co-authored-by: Ajay Tadinada <at663@cornell.edu>
+
+commit 7923184a7074dd623422bad8468ffe420240a46c
+Author: Mericel <mst223@cornell.edu>
+Date:   Thu May 2 20:48:15 2024 -0400
+
+    Updated yaml file
+
+commit 5343fac7babf69cbb97775c0f88f05d78cc4b568
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Thu May 2 20:41:59 2024 -0400
+
+    added piece.mli
+
+commit 0f2a00f00bbbae5bb3c78e85b531da4a2ea6776e
+Merge: ad66e3a 30bee17
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Thu May 2 20:36:19 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit 30bee17b58a520587f58675597f721eec0a1c9a0
+Author: Mericel <mst223@cornell.edu>
+Date:   Thu May 2 20:28:21 2024 -0400
+
+    Fixed typo in yaml file
+
+commit ad66e3a3fb4d87065ed4774f678d92174d20c349
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Sun Apr 28 21:21:50 2024 -0400
+
+    chess, board, and piece.ml
+
+commit 8e404379fbababcbded502af7df7515403ad333c
+Author: Mericel <mst223@cornell.edu>
+Date:   Thu Mar 28 15:09:10 2024 -0400
+
+    Added INSTALL.txt file
+
+commit 10c7d23113441fa199ab588ae3a339c775a6e1b6
+Author: Harrison <hcs59@cornell.edu>
+Date:   Thu Mar 28 13:26:31 2024 -0400
+
+    see if this works
+
+commit 2c2596275618c368e448b5cadb72a7544be1ebd7
+Author: Harrison Mac <hcs59@cornell.edu>
+Date:   Thu Mar 28 13:22:25 2024 -0400
+
+    added a line to make my self a contributor
+
+commit ccf8d78bc1a505b4e728be65fd6471259b85478d
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed Mar 27 15:58:42 2024 -0400
+
+    Added link to demo vid in yaml file
+
+commit 0fb8e07c36fdacc49566f6a748e7c6b5fc8e191d
+Merge: c170786 52a1922
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed Mar 27 15:42:58 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:mst29/cs3110_final_project
+    
+    Merging code
+
+commit c170786d63f2d6f45fd900758fe5f0a50df888e7
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Wed Mar 27 15:35:48 2024 -0400
+
+    Updated version of game.ml and main.ml
+
+commit 52a192296bede4f71f712896bcfd036ac3eff06e
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Wed Mar 27 15:04:23 2024 -0400
+
+    added this to make me a contruibtor
+
+commit b1f87e469194dd538a6bfff32cfbf178e71665a1
+Merge: ea8622b 41415ad
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Wed Mar 27 15:04:18 2024 -0400
+
+    Merge branch 'main' of github.coecis.cornell.edu:mst223/cs3110_final_project
+
+commit ea8622bb05233217d1d624269a29a8e7cd70c2f9
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Wed Mar 27 15:00:30 2024 -0400
+
+    Edited the readme to make myself a contruibtor
+
+commit 41415ad1dfa6be124ffc9f3b3b1e71da2ed65ffe
+Merge: 500f7a0 085e9d4
+Author: mst223 <mst223@cornell.edu>
+Date:   Wed Mar 27 14:49:40 2024 -0400
+
+    Merge pull request #1 from mst223/mericel
+    
+    Mericel
+
+commit 085e9d4162c6bd0030cedd5960414caf18f6caf7
+Author: Mericel <mst223@cornell.edu>
+Date:   Tue Mar 26 15:49:29 2024 -0400
+
+    Made it 7 letters
+
+commit 7b01294141318405500029c39efe913c9bdf00b8
+Author: Mericel <mst223@cornell.edu>
+Date:   Mon Mar 25 22:18:44 2024 -0400
+
+    Added source for word list
+
+commit 7fea2d9341373953f0df6353f5837c18a8929e0f
+Author: Mericel <mst223@cornell.edu>
+Date:   Mon Mar 25 21:42:51 2024 -0400
+
+    Creates basic implementation
+    
+    - Separates game into UI (main) and functionality (game)
+    - Added formatting
+
+commit 500f7a024a4128358a52a32ca871f026b70133ae
+Author: Mericel <mst223@cornell.edu>
+Date:   Mon Mar 25 11:16:46 2024 -0400
+
+    Added word list and alphabet file
+
+commit 2b809e2ff3698b451cd813dffe0adbb48ecdb9c7
+Author: Mericel <mst223@cornell.edu>
+Date:   Sun Mar 24 15:01:30 2024 -0400
+
+    Updated .yaml file
+
+commit 48a0cf56b79a064ae4ad02fad71d1b3059548dce
+Author: Mericel <mst223@cornell.edu>
+Date:   Sun Mar 24 15:00:32 2024 -0400
+
+    Added .yaml file
+
+commit 2ffd977c502dc1402fc56b7bfc09c46aa1fcccf4
+Author: Ajay Tadinada <at633@cornell.edu>
+Date:   Sun Mar 24 14:50:41 2024 -0400
+
+    basic version of the game. will be enhanced later
+
+commit f7f348a32d32bbc09cd634922183263905b3e847
+Author: Harrison Ubuntu <hcs59@cornell.edu>
+Date:   Sun Mar 10 15:00:34 2024 -0400
+
+    added my name
+
+commit 24d40c49e1f7fb861e27e0f90d5d915c76f33000
+Author: sk2682 <17125+sk2682@users.noreply.github.coecis.cornell.edu>
+Date:   Sun Mar 10 14:52:21 2024 -0400
+
+    Update README.md
+
+commit 0aebb7cbcc7fd686c7466fefe33c3e606e4afdd2
+Author: sk2682 <17125+sk2682@users.noreply.github.coecis.cornell.edu>
+Date:   Sun Mar 10 14:52:10 2024 -0400
+
+    Update README.md
+
+commit 7ae8d88e14033370fd7347def8ffdf4e68b9662d
+Author: at663 <at663@cornell.edu>
+Date:   Sun Mar 10 14:51:47 2024 -0400
+
+    added name
+
+commit c8a02dbe1aa7a5c458ec1b0e40c5580fb6e3c483
+Author: Mericel <mst223@cornell.edu>
+Date:   Sun Mar 10 14:49:22 2024 -0400
+
+    Added my name to README
+
+commit ebbe44a572d7e55314f6046bfae08a19f59d15e6
+Author: mst223 <mst223@cornell.edu>
+Date:   Sun Mar 10 14:40:31 2024 -0400
+
+    Create README.md
+
+commit e08482bd0a2b9b9cad9899ced6b7ab6075bd891a
+Author: Mericel <mst223@cornell.edu>
+Date:   Sun Mar 10 14:36:35 2024 -0400
+
+    Initial commit
