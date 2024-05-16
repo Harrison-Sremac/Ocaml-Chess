@@ -1,15 +1,17 @@
+(* @author Ajay Tadinada (at663), Harrison Sremac (hcs59), Mericel Tao (mst223),
+   Sanya Kohli (sk2682) *)
+
 open Types
 
 type position = char * int (* e.g., ('e', 2) *)
 type board = (position * (piece * color)) list
 type move = position * position
 
-(* Helper function to create moves within board limits *)
+(** [within_board (file, rank)] returns true if position [(file, rank)] is
+    within the confines of the board and false otherwise *)
 let within_board (file, rank) =
   file >= 'a' && file <= 'h' && rank >= 1 && rank <= 8
 
-(* Generate possible moves for a King *)
-(* Generate possible moves for a King *)
 let king_moves color (file, rank) board =
   let directions =
     [ (-1, -1); (0, -1); (1, -1); (-1, 0); (1, 0); (-1, 1); (0, 1); (1, 1) ]

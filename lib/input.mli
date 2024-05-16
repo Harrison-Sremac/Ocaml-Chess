@@ -1,3 +1,6 @@
+(* @author Ajay Tadinada (at663), Harrison Sremac (hcs59), Mericel Tao (mst223),
+   Sanya Kohli (sk2682) *)
+
 (** Represents a command issued by the user: either a move or quitting the game. *)
 type user_command =
   | Move of (char * int) * (char * int)

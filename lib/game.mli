@@ -1,3 +1,6 @@
+(* @author Ajay Tadinada (at663), Harrison Sremac (hcs59), Mericel Tao (mst223),
+   Sanya Kohli (sk2682) *)
+
 open Types
 
 type game_state = {

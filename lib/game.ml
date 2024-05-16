@@ -1,7 +1,12 @@
+(* @author Ajay Tadinada (at663), Harrison Sremac (hcs59), Mericel Tao (mst223),
+   Sanya Kohli (sk2682) *)
+
 open Types
 open Board
 open Input
 
+(** [is_castling_move src dest piece] checks if moving a [piece] from [src] to
+    [dest] is a castle *)
 let is_castling_move src dest piece =
   match piece with
   | King ->
@@ -12,6 +17,7 @@ let is_castling_move src dest piece =
          || file2 = Char.chr (Char.code file1 - 2))
   | _ -> false
 
+(** [perform_castling src dest piece] performs a castling move *)
 let perform_castling board src dest color =
   let king_file, rank = src in
   let new_king_pos, old_rook_pos, new_rook_pos =
@@ -32,6 +38,8 @@ let perform_castling board src dest color =
   :: (new_rook_pos, (Rook, color))
   :: board_without_pieces
 
+(** [is_en_passant_move src dest piece board last_move curr_color] checks if
+    moving a [piece] from [src] to [dest] is an en passant *)
 let is_en_passant_move src dest piece board last_move curr_color =
   match (piece, last_move) with
   | Pawn, Some ((last_src_file, last_src_rank), (last_dest_file, last_dest_rank))
@@ -44,6 +52,7 @@ let is_en_passant_move src dest piece board last_move curr_color =
       && last_dest_file = dest_file && last_dest_rank = src_rank
   | _ -> false
 
+(** [perform_en_passant src dest piece] performs an en_passant move *)
 let perform_en_passant board src dest curr_color =
   let file, rank = dest in
   let capture_rank = if curr_color = White then rank - 1 else rank + 1 in
@@ -78,6 +87,7 @@ let check_game_status state =
   else if Board.king_in_check state.board state.turn then (false, "Check")
   else (false, "")
 
+(** [can_castle] checks if a move can castle *)
 let can_castle state src dest =
   let open Board in
   let file1, rank1 = src in
@@ -128,9 +138,13 @@ let can_castle state src dest =
   in
   is_path_clear && is_king_safe && king_has_not_moved && rook_has_not_moved
 
+(** [move_gets_king_out_of_check board src dest curr_color] is a move that makes
+    the king get out of check*)
 let move_gets_king_out_of_check board src dest curr_color =
   not (king_in_check (make_move board src dest curr_color) curr_color)
 
+(** [perform_regular_move state src dest curr_color] is a move that is not a
+    special one listed above *)
 let perform_regular_move state src dest curr_color =
   let new_board = Board.make_move state.board src dest curr_color in
   let game_over, status = check_game_status { state with board = new_board } in
@@ -213,6 +227,8 @@ let make_move state src dest curr_color =
       print_endline "Invalid move. Please try again.";
       (state, "Invalid move")
 
+(** [piece_to_string (piece, color)] provides the string representation of a
+    piece *)
 let piece_to_string (piece, color) =
   match (piece, color) with
   | King, White -> "♔"
@@ -228,6 +244,8 @@ let piece_to_string (piece, color) =
   | Pawn, White -> "♙"
   | Pawn, Black -> "♟"
 
+(** [update_square grid (file, rank) piece_opt] updates the a square of the gui
+    when changes occur *)
 let update_square grid (file, rank) piece_opt =
   let row = 8 - rank in
   (* Convert rank to row index *)
@@ -238,6 +256,7 @@ let update_square grid (file, rank) piece_opt =
   | Some piece -> button#set_label (piece_to_string piece)
   | None -> button#set_label ""
 
+(** [update_gui board grid] updates the gui when changes occur *)
 let update_gui board grid =
   for row = 0 to 7 do
     for col = 0 to 7 do
@@ -249,6 +268,7 @@ let update_gui board grid =
     done
   done
 
+(* intro message*)
 let print_welcome_message () =
   print_endline "Welcome to OCaml Chess!";
   print_endline
@@ -256,6 +276,7 @@ let print_welcome_message () =
      to e4, or click on squares to move pieces.";
   print_endline "Type 'quit' to quit the game."
 
+(* initial state of board *)
 let state board_ref =
   ref
     {
@@ -266,6 +287,9 @@ let state board_ref =
       last_move = None;
     }
 
+(** [create_gui board_ref move_queue] initiates the gui for user interfacing. We
+    drew inspiration for the gui implementation from
+    https://garrigue.github.io/lablgtk/, date accessed 5/16/24, lines 292- 399 *)
 let create_gui board_ref move_queue =
   ignore (GMain.init ());
   let st = state board_ref in
@@ -384,6 +408,9 @@ let create_gui board_ref move_queue =
 
   grid
 
+(** [game_loop] provides the terminal implementation and moves the game forward.
+    Again, used https://garrigue.github.io/lablgtk/, date accessed 5/16/24,
+    lines 414-461 *)
 let rec game_loop state board_ref move_queue grid =
   print_board state.board;
   if state.game_over then (
@@ -434,6 +461,7 @@ let rec game_loop state board_ref move_queue grid =
         print_endline "Invalid input. Please try again.";
         game_loop state board_ref move_queue grid)
 
+(* main calls *)
 let main () =
   print_welcome_message ();
   let initial_state = init_game () in
@@ -449,4 +477,5 @@ let main () =
 
   GMain.Main.main ()
 
+(* initiate *)
 let () = main ()

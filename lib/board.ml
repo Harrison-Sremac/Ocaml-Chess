@@ -1,3 +1,6 @@
+(* @author Ajay Tadinada (at663), Harrison Sremac (hcs59), Mericel Tao (mst223),
+   Sanya Kohli (sk2682) *)
+
 open Types
 
 type position = char * int
@@ -30,11 +33,15 @@ let create_initial_castling_rights () =
   }
   [@coverage off]
 
+(** [create_pawn_row] creates the row of pawns in the second row of an initial
+    chess board of color [color] at rank [rank] *)
 let create_pawn_row color rank =
   List.map
     (fun file -> ((file, rank), (Pawn, color)))
     [ 'a'; 'b'; 'c'; 'd'; 'e'; 'f'; 'g'; 'h' ]
 
+(** [create_piece_row] creates a row of appropriate pieces in a set up chess
+    board *)
 let create_piece_row color rank =
   [
     (('a', rank), (Rook, color));

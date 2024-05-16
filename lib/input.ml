@@ -1,7 +1,11 @@
+(* @author Ajay Tadinada (at663), Harrison Sremac (hcs59), Mericel Tao (mst223),
+   Sanya Kohli (sk2682) *)
+
 type user_command =
   | Move of (char * int) * (char * int)
   | Quit
 
+(** [parse_position input] makes sense of the positions input by the user *)
 let parse_position input =
   if String.length input = 2 then
     let file = input.[0] in
