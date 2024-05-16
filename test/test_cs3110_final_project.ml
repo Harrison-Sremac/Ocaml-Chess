@@ -120,9 +120,8 @@ let test_bishop_move _ =
     (List.sort compare expected_moves)
 
 let test_castling _ =
-  print_endline "castle";
   let board = initialize_board () in
-  (* Clear path and move king and rook *)
+  (* Clear path for castling *)
   let board = make_move board ('e', 2) ('e', 4) White in
   let board = make_move board ('e', 7) ('e', 5) Black in
   let board = make_move board ('g', 1) ('f', 3) White in
@@ -131,23 +130,18 @@ let test_castling _ =
   let board = make_move board ('f', 8) ('c', 5) Black in
   let board = make_move board ('d', 2) ('d', 3) White in
   let board = make_move board ('e', 8) ('f', 8) Black in
-  let valid_moves = king_moves White ('e', 1) board in
-  let expected_moves =
-    [
-      (('e', 1), ('e', 2));
-      (('e', 1), ('d', 2));
-      (('e', 1), ('f', 1));
-      (('e', 1), ('g', 1));
-    ]
+
+  (* Perform castling move *)
+  let board = perform_castling board ('e', 1) ('g', 1) White in
+
+  (* Check if the board state is correct after castling *)
+  let expected_board =
+    List.filter (fun (pos, _) -> pos <> ('e', 1) && pos <> ('h', 1)) board
+    @ [ (('g', 1), (King, White)); (('f', 1), (Rook, White)) ]
   in
-  List.iter
-    (fun (src, dest) ->
-      Printf.printf "Valid move: %c%d to %c%d\n" (fst src) (snd src) (fst dest)
-        (snd dest))
-    valid_moves;
-  assert_equal
-    (List.sort compare valid_moves)
-    (List.sort compare expected_moves)
+
+  (* Compare the board states *)
+  assert_equal (List.sort compare board) (List.sort compare expected_board)
 
 let test_en_passant _ =
   let board = initialize_board () in
@@ -287,6 +281,28 @@ let checkmate_true _ =
   let board = make_move board ('d', 1) ('h', 5) White in
   assert_equal (check_mate board Black) true
 
+let stalemate_true _ =
+  let board = initialize_board () in
+  let board = make_move board ('c', 2) ('c', 4) White in
+  let board = make_move board ('h', 7) ('h', 5) Black in
+  let board = make_move board ('a', 7) ('a', 5) White in
+  let board = make_move board ('d', 1) ('a', 4) Black in
+  let board = make_move board ('a', 8) ('a', 6) White in
+  let board = make_move board ('a', 4) ('a', 5) Black in
+  let board = make_move board ('a', 6) ('h', 6) White in
+  let board = make_move board ('a', 5) ('c', 7) Black in
+  let board = make_move board ('f', 7) ('f', 6) White in
+  let board = make_move board ('c', 7) ('d', 7) Black in
+  let board = make_move board ('e', 8) ('f', 7) White in
+  let board = make_move board ('d', 7) ('b', 7) Black in
+  let board = make_move board ('d', 8) ('d', 3) White in
+  let board = make_move board ('b', 7) ('b', 8) Black in
+  let board = make_move board ('d', 3) ('h', 7) White in
+  let board = make_move board ('b', 8) ('c', 8) Black in
+  let board = make_move board ('f', 7) ('g', 6) White in
+  let board = make_move board ('c', 8) ('e', 6) White in
+  assert_equal (stale_mate board White) true
+
 let suite =
   "Chess Tests"
   >::: [
@@ -312,6 +328,7 @@ let suite =
          "check_checkmate_false" >:: check_checkmate_false;
          "check_stalemate_false" >:: check_stalemate_false;
          "checkmate_true" >:: checkmate_true;
+         "stalemate_true" >:: stalemate_true;
        ]
 
 let () = run_test_tt_main suite
